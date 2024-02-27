@@ -16,6 +16,15 @@ const Promotores = sequelizeCrm.define('promotores', {
     distritoSeccion: {
         type: DataTypes.STRING,
     },
+    genero: {
+        type: DataTypes.STRING
+    },
+    edad: {
+        type: DataTypes.STRING
+    },
+    fechaNacimiento: {
+        type: DataTypes.DATE
+    },
     idUsuario: {
         type: DataTypes.INTEGER
     },

@@ -4,7 +4,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelizeCrm = require('../config/sequelize.crm');
 const Promotores = require('./promotores.model');
 
-const Promovidos = sequelizeCrm.define('Promovidos', {
+const   Promovidos = sequelizeCrm.define('Promovidos', {
     // Model attributes are defined here
     idPromovido: {
         type: DataTypes.INTEGER,
@@ -22,7 +22,7 @@ const Promovidos = sequelizeCrm.define('Promovidos', {
     direccion: {
         type: DataTypes.STRING
     },
-    celular: {
+    telefono: {
         type: DataTypes.STRING
     },
     mail: {
@@ -33,6 +33,15 @@ const Promovidos = sequelizeCrm.define('Promovidos', {
     },
     redesSociales: {
         type: DataTypes.STRING
+    },
+    genero: {
+        type: DataTypes.STRING
+    },
+    edad: {
+        type: DataTypes.STRING
+    },
+    fechaNacimiento: {
+        type: DataTypes.DATE
     },
     vota: {
         type: DataTypes.BOOLEAN
