@@ -1,0 +1,7 @@
+INSERT INTO `db_a57e86_provdos`.`catroles` (`idRol`, `descripcion`, `activo`) VALUES (1, 'Administrador', 1);
+INSERT INTO `db_a57e86_provdos`.`catroles` (`idRol`, `descripcion`, `activo`) VALUES (2, 'Capturista', 1);
+INSERT INTO `db_a57e86_provdos`.`catroles` (`idRol`, `descripcion`, `activo`) VALUES (3, 'Promotor', 1);
+INSERT INTO `db_a57e86_provdos`.`catroles` (`idRol`, `descripcion`, `activo`) VALUES (4, 'Promovido', 1);
+
+
+INSERT INTO `db_a57e86_provdos`.`usuarios` (`idUsuario`, `usuario`, `contrasena`, `nombre`, `mail`, `telefono`, `activo`, `idRol`) VALUES (1, 'admin', 'Abcde12345', 'Admin', 'var901106@gmail.com', '4433740472', 1, 1);
