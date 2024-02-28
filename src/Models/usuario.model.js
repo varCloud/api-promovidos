@@ -12,7 +12,7 @@ const Usuarios = sequelizeCrm.define('usuarios', {
         autoIncrement: true
     },
 
-    nombre: {
+    nombres: {
         type: DataTypes.STRING,
         allowNull: false
     },

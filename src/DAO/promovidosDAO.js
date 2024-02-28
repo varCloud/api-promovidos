@@ -6,6 +6,7 @@ class PromovidoDAO {
 
     async crearPromovido(promovido) {
         try {
+            promovido.activo = 1;
             await Promovidos.create(promovido,{isNewRecord:true})
             const promotorActual = await Promovidos.findOne({
                 order: [
