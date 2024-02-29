@@ -64,6 +64,8 @@ app.use("/csv/intereses", require("./api/csv/intereses/csv_intereses"))
 app.use("/csv/cliente", require("./api/csv/clientes/csv_clientes"))
 app.use("/csv/usuario", require("./api/csv/usuarios/csv_usuarios"))
 app.use("/roles", require("./api/roles/roles"))
+
+
 app.use("/promotores", require("./api/promotores/promotores"))
 app.use("/promovidos", require("./api/promovidos/promovidos"))
 app.use("/segumientosPromovidos", require("./api/seguiminetosPromovidos/seguiminetoPromovidos"))

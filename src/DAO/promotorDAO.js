@@ -6,7 +6,7 @@ class PromotorDAO {
     async crearPromotor(promotor) {
         try {
             const newUsuer = await UsuarioModel.create(promotor,{isNewRecord:true})
-            await PromotorModel.create({...promotor, idUsuario: newUsuer.idUsuario})
+            await PromotorModel.create({...promotor, idUsuario: newUsuer.idUsuario , creadoPor: promotor.usuarioSession.idUsuario})
 
             let promotorActual = await PromotorModel.findOne({
                 order: [

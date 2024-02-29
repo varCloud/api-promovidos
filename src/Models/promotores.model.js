@@ -13,7 +13,7 @@ const Promotores = sequelizeCrm.define('promotores', {
         autoIncrement: true
     },
 
-    distritoSeccion: {
+    seccion: {
         type: DataTypes.STRING,
     },
     genero: {
@@ -22,16 +22,23 @@ const Promotores = sequelizeCrm.define('promotores', {
     edad: {
         type: DataTypes.STRING
     },
-    fechaNacimiento: {
+    edad: {
+        type: DataTypes.STRING
+    },
+    redesSociales: {
         type: DataTypes.DATE
     },
     idUsuario: {
         type: DataTypes.INTEGER
     },
+    creadoPor:{
+        type: DataTypes.INTEGER
+    }
 }, {
     timestamps: false
 });
 
 
 Promotores.belongsTo(Usuarios,{as: 'Usuario', foreignKey: 'idUsuario'});
+Promotores.belongsTo(Usuarios,{as: 'CreadoPor', foreignKey: 'creadoPor'});
 module.exports = Promotores;

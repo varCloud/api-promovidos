@@ -16,9 +16,9 @@ const Usuarios = sequelizeCrm.define('usuarios', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    // apellidos: {
-    //     type: DataTypes.STRING
-    // },
+     apellidos: {
+         type: DataTypes.STRING
+    },
     telefono: {
         type: DataTypes.STRING
     },

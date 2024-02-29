@@ -39,36 +39,24 @@ async function generateToken(req, res) {
 }
 
 
-async function validateToken(request, response, next) {
+async function validateToken(req, res, next) {
     try {
-        winston.info("Token: " + request.headers['authorization-pp']);
-        var token = request.headers['authorization-pp']
-        var result = { estatus: -1, mensaje: " " }
-        let usuario = {}
-        if (!token) {
-            result.mensaje = "Es necesario el token de autenticación"
-            return response.status(401).json(result);
-        }
-        if (!token.includes("Bearer-PP")) {
-            result.mensaje = "Es necesario el portador de autenticación"
-            return response.status(401).json(result);
-        }
-        token = token.replace('Bearer-PP ', '')
+        winston.info("Token: " + req.headers['authorization']);
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+
+        if (token == null) return res.sendStatus(401)
+        
+
         jwt.verify(token, jwtClave, function (err, user) {
-            if (err) {
-                result.mensaje = "JWT Token invalido";
-                return response.status(401).json(result);
-            } else {
-                usuario = user
-                usuario.postData = request.body
-                result.mensaje = "JWT Token valido"
-                result.estatus = 200;
-            }
-        });
-        request.usuario = usuario;
+            if (err) return res.sendStatus(403)
+            req.usuarioSession = user;
+            req.body.usuarioSession = {...user.usuario.dataValues};
+        })
+
         return next();
     } catch (err) {
-        return response.status(500).json({ status: 500, message: "Error interno del servidor" });
+        return res.status(500).json({ status: 500, message: `Error interno del servidor ${err.message}` });
     }
 }
 

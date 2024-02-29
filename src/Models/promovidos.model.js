@@ -3,6 +3,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelizeCrm = require('../config/sequelize.crm');
 const Promotores = require('./promotores.model');
+const Usuarios = require('./usuario.model');
 
 const   Promovidos = sequelizeCrm.define('Promovidos', {
     // Model attributes are defined here
@@ -51,6 +52,9 @@ const   Promovidos = sequelizeCrm.define('Promovidos', {
     },
     idPromotor:{
         type: DataTypes.INTEGER
+    },
+    creadoPor:{
+        type: DataTypes.INTEGER
     }
 }, {
     timestamps: false
@@ -58,4 +62,5 @@ const   Promovidos = sequelizeCrm.define('Promovidos', {
 
 
 Promovidos.belongsTo(Promotores,{as: 'Promotor', foreignKey: 'idPromotor'});
+Promovidos.belongsTo(Usuarios,{as: 'CreadoPor', foreignKey: 'creadoPor'});
 module.exports = Promovidos;
