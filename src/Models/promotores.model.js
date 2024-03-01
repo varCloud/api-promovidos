@@ -22,8 +22,11 @@ const Promotores = sequelizeCrm.define('promotores', {
     edad: {
         type: DataTypes.STRING
     },
-    edad: {
+    direccion: {
         type: DataTypes.STRING
+    },
+    fechaNacimiento: {
+        type: DataTypes.DATE
     },
     redesSociales: {
         type: DataTypes.DATE
