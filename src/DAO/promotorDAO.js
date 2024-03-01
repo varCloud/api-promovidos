@@ -5,7 +5,7 @@ class PromotorDAO {
 
     async crearPromotor(promotor) {
         try {
-
+            promotor.activo = 1;
             const newUsuer = await UsuarioModel.create(promotor, { isNewRecord: true })
             await PromotorModel.create({ ...promotor, idUsuario: newUsuer.idUsuario, creadoPor: promotor.usuarioSession.idUsuario })
 

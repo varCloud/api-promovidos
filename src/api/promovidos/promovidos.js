@@ -1,9 +1,10 @@
 const { Router } = require("express");
 const router = Router();
-const PromotoresController = require("./promovidos.controller");
+const PromovidosController = require("./promovidos.controller");
 const { validateToken } = require("../token/tokenController");
 
-router.post('/',validateToken, PromotoresController.crearPromotor);
-router.get('/',validateToken ,PromotoresController.getPromotores);
-
+router.post('/',validateToken, PromovidosController.crearPromovido);
+router.get('/',validateToken ,PromovidosController.getPromovidos);
+router.put('/',validateToken,PromovidosController.actualizarPromovido);
+router.delete('/:id',validateToken,PromovidosController.eliminarPromovido);
 module.exports = router;

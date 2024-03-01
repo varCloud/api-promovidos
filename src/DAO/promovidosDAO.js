@@ -32,7 +32,7 @@ class PromovidoDAO {
                 [Op.notIn]: 0
             }
             let filter = { idPromovido: options }
-            const promotores = await Promovidos.findAll({
+            const promovidos = await Promovidos.findAll({
                 order: [
                     ['idPromovido', 'ASC']
                 ],
@@ -42,25 +42,26 @@ class PromovidoDAO {
                     association: 'Promotor'
                 }]
             })
-            return promotores;
+            return promovidos;
         } catch (error) {
             throw error;
         }
     }
 
-    async actualizarPromotor(promotor) {
+    async actualizarPromovido(promovido) {
         try {
-            let promotorActual = await promotorModel.update({...promotor }, { logging: true, where: { idpromotor: promotor.idpromotor } })
-            return promotorActual;
+            console.log(promovido)
+            let promovidoActual = await Promovidos.update({...promovido }, { where: { idPromovido: promovido.idPromovido } })
+            return promovidoActual;
         } catch (error) {
             throw error;
         }
     }
 
-    async eliminarPromotor(promotor) {
+    async eliminarPromovido(idPromovido) {
         try {
-            let promotorActual = await promotorModel.update({ activo: 0 }, { logging: true, where: { idpromotor: promotor.idpromotor } })
-            return promotorActual;
+            let promovidoActual = await Promovidos.update({ activo: 0 }, { where: { idPromovido: idPromovido } })
+            return promovidoActual;
         } catch (error) {
             throw error;
         }
