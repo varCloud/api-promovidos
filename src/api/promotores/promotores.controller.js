@@ -20,6 +20,24 @@ class PromotoresController {
             return res.status(500).json({ status: 500, message: err.message });
         }
     }
+
+    async actualizarPromotor(req, res) {
+        try {
+            let data = await PromotoresDAO.actualizarPromotor(req.body)
+            res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+    }
+
+    async eliminarPromotor(req, res) {
+        try {
+            let data = await PromotoresDAO.obtenerPromotores(req.params.id)
+            res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+    }
 }
 
 module.exports = new PromotoresController()

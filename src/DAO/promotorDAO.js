@@ -5,13 +5,9 @@ class PromotorDAO {
 
     async crearPromotor(promotor) {
         try {
-            if(promotor.idPromotor && promotor.idPromotor > 0){
-                await UsuarioModel.update({...promotor}, { where : {idUsuario : promotor.idUsuario}})
-                await PromotorModel.update({...promotor},{where : { idPromotor: promotor.idPromotor }})
-            }else{
-                const newUsuer = await UsuarioModel.create(promotor,{isNewRecord:true})
-                await PromotorModel.create({...promotor, idUsuario: newUsuer.idUsuario , creadoPor: promotor.usuarioSession.idUsuario})
-            }
+
+            const newUsuer = await UsuarioModel.create(promotor, { isNewRecord: true })
+            await PromotorModel.create({ ...promotor, idUsuario: newUsuer.idUsuario, creadoPor: promotor.usuarioSession.idUsuario })
 
             let promotorActual = await PromotorModel.findOne({
                 order: [
@@ -54,16 +50,17 @@ class PromotorDAO {
 
     async actualizarPromotor(promotor) {
         try {
-            let promotorActual = await promotorModel.update({...promotor }, { logging: true, where: { idpromotor: promotor.idpromotor } })
-            return promotorActual;
+            await UsuarioModel.update({ ...promotor }, { where: { idUsuario: promotor.idUsuario } })
+            await PromotorModel.update({ ...promotor }, { where: { idPromotor: promotor.idPromotor } })
+            return promotor;
         } catch (error) {
             throw error;
         }
     }
 
-    async eliminarPromotor(promotor) {
+    async eliminarPromotor(idPromotor) {
         try {
-            let promotorActual = await promotorModel.update({ activo: 0 }, { logging: true, where: { idpromotor: promotor.idpromotor } })
+            let promotorActual = await PromotorModel.update({ activo: 0 }, { where: { idPromotor: idPromotor } })
             return promotorActual;
         } catch (error) {
             throw error;
