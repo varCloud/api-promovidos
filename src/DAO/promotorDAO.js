@@ -31,7 +31,7 @@ class PromotorDAO {
             } : {
                 [Op.notIn]: 0
             }
-            let filter = { idPromotor: options }
+            let filter = { idPromotor: options , activo:1 }
             const promotores = await PromotorModel.findAll({
                 order: [
                     ['idPromotor', 'ASC']

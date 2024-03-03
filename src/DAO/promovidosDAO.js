@@ -31,16 +31,21 @@ class PromovidoDAO {
             } : {
                 [Op.notIn]: 0
             }
-            let filter = { idPromovido: options }
+            let filter = { idPromovido: options , activo:1 }
             const promovidos = await Promovidos.findAll({
                 order: [
                     ['idPromovido', 'ASC']
                 ],
                 logging: true,
                 where: filter,
-                include: [{
-                    association: 'Promotor'
-                }]
+                include: [
+                    {
+                    association: 'Promotor',
+                    include:[
+                        {association:'Usuario'}
+                    ]
+                    }
+                ]
             })
             return promovidos;
         } catch (error) {
