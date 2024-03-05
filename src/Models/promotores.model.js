@@ -29,13 +29,16 @@ const Promotores = sequelizeCrm.define('promotores', {
         type: DataTypes.DATE
     },
     redesSociales: {
-        type: DataTypes.DATE
+        type: DataTypes.STRING
     },
     idUsuario: {
         type: DataTypes.INTEGER
     },
     creadoPor:{
         type: DataTypes.INTEGER
+    },
+    activo:{
+        type: DataTypes.BOOLEAN
     }
 }, {
     timestamps: false

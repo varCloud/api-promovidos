@@ -4,7 +4,7 @@ const tokenDAO = require("../../DAO/tokenDAO");
 var jwt = require('jsonwebtoken');
 const configGlobal = require('../../config/config');
 var jwtClave = configGlobal.JWT_KEY;
-var jwtTiempoToken = 60 * 60 * 24; // expires in 24 hours
+var jwtTiempoToken = 60 * 60 * 360; // expires in 24 hours
 
 async function generateToken(req, res) {
     try {

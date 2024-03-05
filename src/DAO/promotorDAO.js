@@ -36,7 +36,6 @@ class PromotorDAO {
                 order: [
                     ['idPromotor', 'ASC']
                 ],
-                logging: true,
                 where: filter,
                 include: [{
                     association: 'Usuario',
@@ -60,7 +59,7 @@ class PromotorDAO {
 
     async eliminarPromotor(idPromotor) {
         try {
-            let promotorActual = await PromotorModel.update({ activo: 0 }, { where: { idPromotor: idPromotor } })
+            let promotorActual = await PromotorModel.update({ activo: 0 }, { logging:true, where: { idPromotor: idPromotor } })
             return promotorActual;
         } catch (error) {
             throw error;
