@@ -44,17 +44,13 @@ app.use("/token", require("./api/token/token"));
 app.use("/echo", require("./api/echo/echo"));
 app.use("/catalogo", require("./api/catalogo/catalogo"));
 app.use("/usuario", require("./api/usuario/usuario"))
-app.use("/cursos", require("./api/cursos/cursos"));
 app.use("/intereses", require("./api/intereses/intereses"));
-app.use("/catIntereses", require("./api/catIntereses/catIntereses"));
-app.use("/cliente", require("./api/cliente/cliente"));
 app.use("/tipoCliente", require("./api/tipoCliente/tipoCliente"));
 app.use("/tiposervicios", require("./api/tiposervicios/tiposervicios"));
 app.use("/instructores", require("./api/instructores/instructores"));
 app.use("/tipoSeguimiento", require("./api/tipoSeguimiento/tipoSeguimiento"));
-app.use("/cotizaciones", require("./api/cotizaciones/cotizaciones"));
+
 app.use("/ventas", require('./api/ventas/ventas'))
-app.use("/calCotizaciones", require("./api/calCotizaciones/calCotizaciones"));
 app.use("/csv/tipoSeguimiento", require("./api/csv/tipoSeguimiento/csv_tipoSeguimiento"));
 app.use("/csv/cursos", require("./api/csv/cursos/csv_cursos"))
 app.use("/csv/tipoCliente", require("./api/csv/tipoCliente/csv_tipoCliente"))
@@ -70,6 +66,7 @@ app.use("/promotores", require("./api/promotores/promotores"))
 app.use("/promovidos", require("./api/promovidos/promovidos"))
 app.use("/segumientosPromovidos", require("./api/seguiminetosPromovidos/seguiminetoPromovidos"))
 app.use("/login", require("./api/login/login"))
+app.use("/dashboard", require("./api/dashboard/dashboard"))
 
 const swaggerSpec = swaggerJSDoc({
     swaggerDefinition: {

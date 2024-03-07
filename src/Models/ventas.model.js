@@ -2,7 +2,6 @@ const { Sequelize, DataTypes } = require('sequelize')
 const sequelizeCrm = require('../config/sequelize.crm')
 
 const Instructor = require('./instructores.model')
-const Cotizacion = require('./cotizaciones.model')
 const Usuario = require('./usuario.model')
 
 const Ventas = sequelizeCrm.define('ventas', {
@@ -40,7 +39,6 @@ const Ventas = sequelizeCrm.define('ventas', {
 })
 
 Ventas.belongsTo(Instructor, { as: 'Instructor', foreignKey: 'idInstructor' })
-Ventas.belongsTo(Cotizacion, { as: 'Cotizacion', foreignKey: 'idCotizacion' })
 Ventas.belongsTo(Usuario, { as: 'Usuario', foreignKey: 'Usuarios_idUsuario' })
 
 module.exports = Ventas
