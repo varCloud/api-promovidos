@@ -44,6 +44,9 @@ const   Promovidos = sequelizeCrm.define('Promovidos', {
     fechaNacimiento: {
         type: DataTypes.DATE
     },
+    fechaAlta: {
+        type: DataTypes.DATE
+    },
     vota: {
         type: DataTypes.BOOLEAN
     },

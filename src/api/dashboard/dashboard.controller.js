@@ -11,7 +11,15 @@ class DashboardController {
             return res.status(500).json({ status: 500, message: err.message });
         }
     }
-    
+
+    async obtenerDataGraficoGenero(req, res) {
+        try {
+            let data = await dashboardPromovidosDAO.obtenerDataGraficoGenero();
+            res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+    }
    
 }
 

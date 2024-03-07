@@ -37,6 +37,9 @@ const Usuarios = sequelizeCrm.define('usuarios', {
     activo: {
         type: DataTypes.INTEGER
     },
+    fechaAlta: {
+        type: DataTypes.DATE
+    },
 }, {
     timestamps: false
 });

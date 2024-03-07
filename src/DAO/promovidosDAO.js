@@ -55,7 +55,6 @@ class PromovidoDAO {
 
     async actualizarPromovido(promovido) {
         try {
-            console.log(promovido)
             let promovidoActual = await Promovidos.update({...promovido }, { where: { idPromovido: promovido.idPromovido } })
             return promovidoActual;
         } catch (error) {
