@@ -20,6 +20,15 @@ class DashboardController {
             return res.status(500).json({ status: 500, message: err.message });
         }
     }
+
+    async obtenerDataGraficoEdades(req, res) {
+        try {
+            let data = await dashboardPromovidosDAO.obtenerDataGraficoEdades();
+            res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+    }
    
 }
 
