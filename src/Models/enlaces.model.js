@@ -2,26 +2,22 @@
 
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelizeCrm = require('../config/sequelize.crm');
+const Promotores = require('./promotores.model');
 const Usuarios = require('./usuario.model');
 
-const Promotores = sequelizeCrm.define('promotores', {
+const Enlaces = sequelizeCrm.define('Enlaces', {
     // Model attributes are defined here
-    idPromotor: {
+    idEnlace: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        primaryKey:true,
-        autoIncrement: true
+        primaryKey:true
     },
 
-    seccion: {
+    nombres: {
         type: DataTypes.STRING,
+        allowNull: false
     },
-    genero: {
-        type: DataTypes.STRING
-    },
-    edad: {
-        type: DataTypes.STRING
-    },
+
     calle: {
         type: DataTypes.STRING
     },
@@ -33,26 +29,39 @@ const Promotores = sequelizeCrm.define('promotores', {
     cp: {
         type: DataTypes.STRING
     },
-    fechaNacimiento: {
-        type: DataTypes.DATE
-    },
-    redesSociales: {
+
+    telefono: {
         type: DataTypes.STRING
     },
-    idUsuario: {
-        type: DataTypes.INTEGER
+
+    mail: {
+        type: DataTypes.STRING
     },
-    creadoPor:{
-        type: DataTypes.INTEGER
+
+    problematica: {
+        type: DataTypes.STRING
     },
-    activo:{
+   
+    fechaAlta: {
+        type: DataTypes.DATE
+    },
+
+    activo: {
         type: DataTypes.BOOLEAN
+    },
+
+    idPromotorEnalce:{
+        type: DataTypes.INTEGER
+    },
+
+    idUsuario:{
+        type: DataTypes.INTEGER
     }
 }, {
     timestamps: false
 });
 
 
-Promotores.belongsTo(Usuarios,{as: 'Usuario', foreignKey: 'idUsuario'});
-Promotores.belongsTo(Usuarios,{as: 'CreadoPor', foreignKey: 'creadoPor'});
-module.exports = Promotores;
+Enlaces.belongsTo(Promotores,{as: 'Promotor', foreignKey: 'idPromotorEnalce'});
+Enlaces.belongsTo(Usuarios,{as: 'CreadoPor', foreignKey: 'idUsuario'});
+module.exports = Enlaces;

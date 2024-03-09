@@ -60,14 +60,6 @@ class DashboardPromovidosDAO {
                 css:'bg-amber-500'
             })
 
-            const seriesGenero = await Promovidos.findAll({
-                where:{
-                    activo : 1
-                },  
-                attributes: ['genero' , [Sequelize.fn('COUNT', Sequelize.col('idPromovido')), 'cantidad']],
-                group:['genero'],
-            })
-
             return dashboardData
 
         } catch (error) {
@@ -84,6 +76,22 @@ class DashboardPromovidosDAO {
                 },  
                 attributes: ['genero' , [Sequelize.fn('COUNT', Sequelize.col('idPromovido')), 'cantidad']],
                 group:['genero'],
+            })
+            return this.buildSeriesGenero(seriesGenero)
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async obtenerDataGraficoEdad() {
+        try {
+
+            const seriesGenero = await Promovidos.findAll({
+                where:{
+                    activo : 1
+                },  
+                attributes: ['genero' , [Sequelize.fn('COUNT', Sequelize.col('idPromovido')), 'cantidad']],
             })
             return this.buildSeriesGenero(seriesGenero)
 

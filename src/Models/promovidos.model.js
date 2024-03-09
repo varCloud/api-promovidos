@@ -20,7 +20,15 @@ const   Promovidos = sequelizeCrm.define('Promovidos', {
     apellidos: {
         type: DataTypes.STRING
     },
-    direccion: {
+    calle: {
+        type: DataTypes.STRING
+    },
+
+    colonia: {
+        type: DataTypes.STRING
+    },
+
+    cp: {
         type: DataTypes.STRING
     },
     telefono: {
