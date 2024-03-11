@@ -68,6 +68,7 @@ app.use("/segumientosPromovidos", require("./api/seguiminetosPromovidos/seguimin
 app.use("/login", require("./api/login/login"))
 app.use("/dashboard", require("./api/dashboard/dashboard"))
 app.use("/enlaces", require("./api/enlaces/enlaces"))
+app.use("/reportes", require("./api/reportes/reportes"))
 
 const swaggerSpec = swaggerJSDoc({
     swaggerDefinition: {
