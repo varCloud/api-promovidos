@@ -55,9 +55,10 @@ class EnlaceDAO {
 
     async actualizarEnlace(enlace) {
         try {
-            let enlaceActual = await Enlaces.update({ ...enlace }, { where: { idEnlace: enlace.idEnlace } })
+            let enlaceActual = await Enlaces.update({ ...enlace }, { logging:true, where: { idEnlace: enlace.idEnlace } })
             return enlaceActual;
         } catch (error) {
+            console.log(error.message)
             throw error;
         }
     }

@@ -97,7 +97,7 @@ class ReportesDAO {
                 var promovidos = await Promovidos.findAll({
                     where: {
                         [Op.and]: [
-                            { idPromotor: 1 },
+                            { idPromotor: promotor.idPromotor },
                             { activo: 1 },
                         ]
                     },

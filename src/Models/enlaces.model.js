@@ -50,7 +50,7 @@ const Enlaces = sequelizeCrm.define('Enlaces', {
         type: DataTypes.BOOLEAN
     },
 
-    idPromotorEnalce:{
+    idPromotorEnlace:{
         type: DataTypes.INTEGER
     },
 
@@ -62,6 +62,6 @@ const Enlaces = sequelizeCrm.define('Enlaces', {
 });
 
 
-Enlaces.belongsTo(Promotores,{as: 'Promotor', foreignKey: 'idPromotorEnalce'});
+Enlaces.belongsTo(Promotores,{as: 'Promotor', foreignKey: 'idPromotorEnlace'});
 Enlaces.belongsTo(Usuarios,{as: 'CreadoPor', foreignKey: 'idUsuario'});
 module.exports = Enlaces;
