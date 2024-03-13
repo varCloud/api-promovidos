@@ -139,6 +139,23 @@ class DashboardPromovidosDAO {
         }
     }
 
+    async obtenerCoberturaPromovidos() {
+        try {
+
+            const seriesGenero = await Promovidos.findAll({
+                where: {
+                    activo: 1
+                },
+                attributes: ['seccion', [Sequelize.fn('COUNT', Sequelize.col('idPromovido')), 'cantidad']],
+                group: ['seccion'],
+            })
+            return this.buildSeriesCoberturaPromovidos(seriesGenero)
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async obtenerPromovidosPorEdad(edadMin, edadMax) {
         try {
             const seriesGraficoEdad = await Promovidos.findAll({
@@ -208,6 +225,17 @@ class DashboardPromovidosDAO {
         })
 
         return series
+    }
+
+    buildSeriesCoberturaPromovidos(data) {
+        const _data = data.map((s) => {
+            return {
+                value : s.dataValues.cantidad,
+                seccion: parseInt(s.seccion),
+            }
+        })
+
+        return _data
     }
 }
 
