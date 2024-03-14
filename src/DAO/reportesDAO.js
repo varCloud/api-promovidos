@@ -29,7 +29,13 @@ class ReportesDAO {
         'seccion',
         `edad`
     ];
-    PATH_DIRECTORY ='src/reportes/promovidos'
+    PATH_DIRECTORY = 'src/reportes/promovidos'
+    MARGIN_DOC = {
+        top: 85,
+        bottom: 30,
+        left: 30,
+        right: 30
+    }
 
     async obtenerPromovidosPorPromotor(idPromotor, res) {
         let response = {};
@@ -61,12 +67,24 @@ class ReportesDAO {
 
             let doc = new PDFDocument({ margin: 30, size: 'A4' });
             // doc.pipe(fs.createWriteStream(`${this.PATH_DIRECTORY}/PromovidoXPromotor.pdf`)); // PARA HACER PRUEBAS LOCALES
+            
+            await this.addHeaderDoc(doc)
+
+            doc.on('pageAdded', async () => {
+                await this.addHeaderDoc(doc)
+            })
+
             doc.pipe(res)
             const table = {
                 title: `Promovidos del promotor:  ${promotor.Usuario.nombres}`,
                 headers: this.HEADERS_PROMOVIDOS,
                 datas: datas
             };
+
+            doc.on('pageAdded', async () => {
+                await doc.image('./src/assets/logo.png', 420, 25, { width: 150, height: 50 })
+            })
+
             await doc.table(table)
             doc.end();
 
@@ -89,9 +107,14 @@ class ReportesDAO {
             })
             const lstPromotores = JSON.parse(JSON.stringify(_promotores))
 
-            let doc = new PDFDocument({ margin: 30, size: 'A4' });
-            //doc.pipe(fs.createWriteStream(`${this.PATH_DIRECTORY}/todos_los_promovidos.pdf`));
+            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
             doc.pipe(res);
+
+            await this.addHeaderDoc(doc)
+
+            doc.on('pageAdded', async () => {
+                await this.addHeaderDoc(doc)
+            })
 
             for (const promotor of lstPromotores) {
                 var promovidos = await Promovidos.findAll({
@@ -113,11 +136,11 @@ class ReportesDAO {
                         );
                         return JSON.parse(_)
                     })
-                    
+
                     const table = {
                         title: `Promovidos del promotor: ${promotor.Usuario.nombres}`,
                         headers: this.HEADERS_PROMOVIDOS,
-                        datas: datas
+                        datas: datas,
                     };
                     await doc.table(table)
                     await doc.addPage()
@@ -129,6 +152,9 @@ class ReportesDAO {
             console.log(`error:::::::::::::::::::::`, ex.message)
             throw ex;
         }
+    }
+    async addHeaderDoc(doc) {
+        await doc.image('./src/assets/logo.png', 420, 25, { width: 130, height: 50 })
     }
 }
 
