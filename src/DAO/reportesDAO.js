@@ -65,7 +65,7 @@ class ReportesDAO {
             })
 
 
-            let doc = new PDFDocument({ margin: 30, size: 'A4' });
+            let doc = new PDFDocument({ margin: {...this.MARGIN_DOC}, size: 'A4' });
             // doc.pipe(fs.createWriteStream(`${this.PATH_DIRECTORY}/PromovidoXPromotor.pdf`)); // PARA HACER PRUEBAS LOCALES
             
             await this.addHeaderDoc(doc)
