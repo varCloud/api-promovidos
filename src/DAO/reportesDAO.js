@@ -153,6 +153,66 @@ class ReportesDAO {
             throw ex;
         }
     }
+
+    async obtenerTodosPromotores(res) {
+        let response = {};
+        try {
+            var _promotores = await Promotores.findAll({
+                where: { activo: 1 },
+                include: [{
+                    association: 'Usuario',
+                }]
+            })
+            const lstPromotores = JSON.parse(JSON.stringify(_promotores))
+            console.log(_promotores)
+            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
+            doc.pipe(res);
+
+            await this.addHeaderDoc(doc)
+
+            doc.on('pageAdded', async () => {
+                await this.addHeaderDoc(doc)
+            })
+
+            const data = JSON.parse(JSON.stringify(lstPromotores))
+            if (data.length > 0) {
+                //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
+                const datas = data.map((item) => {
+                    const _ = JSON.stringify(item,
+                        (key, value) => (value === null) ? this.REPLACE_NULL : value
+                    );
+                    return JSON.parse(_)
+                })
+                const dataTable = datas.map(data => {
+                    return {
+                        nombres: data.Usuario.nombres,
+                        apellidos: data.Usuario.apellidos,
+                        calle: data.calle,
+                        colonia: data.colonia,
+                        cp: data.cp,
+                        telefono: data.Usuario.telefono,
+                        mail: data.Usuario.mail,
+                        seccion: data.seccion,
+                        edad: data.edad,
+                    }
+                });
+                const table = {
+                    title: `Promotores`,
+                    headers: this.HEADERS_PROMOVIDOS,
+                    datas: dataTable,
+                };
+                console.log(dataTable)
+                await doc.table(table)
+                await doc.addPage()
+            }
+
+            doc.end();
+            return response;
+        } catch (ex) {
+            console.log(`error:::::::::::::::::::::`, ex.message)
+            throw ex;
+        }
+    }
     async addHeaderDoc(doc) {
         await doc.image('./src/assets/logo.png', 420, 25, { width: 130, height: 50 })
     }
