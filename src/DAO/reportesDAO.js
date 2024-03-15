@@ -28,6 +28,14 @@ class ReportesDAO {
         { label: 'Mail', property: 'mail', renderer: null },
         { label: 'Problematica', property: 'problematica', renderer: null},
     ]
+    HEADERS_ENLACES_POR_PROMOTOR = [
+        { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
+        { label: 'Calle', property: 'calle', renderer: null },
+        { label: 'Colonia', property: 'colonia', renderer: null },
+        { label: 'Teléfono', property: 'telefono', renderer: null },
+        { label: 'Mail', property: 'mail', renderer: null },
+        { label: 'Problematica', property: 'problematica', renderer: null},
+    ]
     FIELDS = [
         'nombres',
         'apellidos',
@@ -211,6 +219,7 @@ class ReportesDAO {
             if (data.length > 0) {
                 const datas = remplazarNulos(data)
                 const dataTable = datas.map(data => {
+                    console.log(data)
                     return {
                         nombresEnlace: data.nombres,
                         nombresPromotor: data.Promotor.Usuario.nombres + ' ' +data.Promotor.Usuario.apellidos,
@@ -231,7 +240,52 @@ class ReportesDAO {
             throw ex;
         }
     }
+    async obtenerEnlacesPorPromotor(idPromotor, res) {
+        let response = {};
+        try {
+            var _enlaces = await Enlaces.findAll({
+                where: { activo: 1, idPromotorEnlace: idPromotor  },
+                include: [{
+                    association: 'Promotor',
+                    include: [
+                        { association: 'Usuario' }
+                    ]
+                }]
+            })
+            const lstEnlaces = JSON.parse(JSON.stringify(_enlaces))
+            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
+            doc.pipe(res);
+            
+            await this.addHeaderDoc(doc)
+            
+            doc.on('pageAdded', async () => {
+                await this.addHeaderDoc(doc)
+            })
+            
+            const data = JSON.parse(JSON.stringify(lstEnlaces))
+            if (data.length > 0) {
+                const datas = remplazarNulos(data)
+                const dataTable = datas.map(data => {
+                    console.log(data)
+                    return {
+                        nombresEnlace: data.nombres,
+                        calle: data.calle,
+                        colonia: data.colonia,
+                        telefono: data.telefono,
+                        mail: data.mail,
+                        problematica: data.problematica
+                    }
+                });
+                await this.addTable(doc, dataTable, `Enlaces de: ${data[0].Promotor.Usuario.nombres}`, this.HEADERS_ENLACES_POR_PROMOTOR )
+            }
 
+            doc.end();
+            return response;
+        } catch (ex) {
+            console.log(`error:::::::::::::::::::::`, ex.message)
+            throw ex;
+        }
+    }
     async addTable(doc, dataTable, title, headers) {
         const table = {
             title: title,

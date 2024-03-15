@@ -34,7 +34,13 @@ class ReportesController {
         }
     }
     
-   
+   async obtenerEnlacesPorPromotor(req, res) {
+        try {
+            await ReportesDAO.obtenerEnlacesPorPromotor(req.params.id, res);
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+   }
 }
 
 module.exports = new ReportesController()

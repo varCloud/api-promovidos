@@ -8,4 +8,5 @@ router.get('/promovidoPorPromotor/:id',validateToken ,ReportesController.obtener
 router.get('/obtenerTodosPromovidos',validateToken ,ReportesController.obtenerTodosPromovidos);
 router.get('/obtenerTodosPromotores', validateToken, ReportesController.obtenerTodosPromotores);
 router.get('/obtenerTodosEnlaces', validateToken, ReportesController.obtenerTodosEnlaces);
+router.get('/obtenerTodosEnlaces/:id', validateToken, ReportesController.obtenerEnlacesPorPromotor);
 module.exports = router;
