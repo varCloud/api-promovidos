@@ -5,9 +5,9 @@ const db = require("../config/database");
 const Promotores = require("../Models/promotores.model");
 const { Op } = require("sequelize");
 const Enlaces = require("../Models/enlaces.model");
-
+const { remplazarNulos } = require("../api/Utilerias/utils")
+const EnlaceDAO = require("./enlacesDAO")
 class ReportesDAO {
-    REPLACE_NULL = ' - - - ';
     HEADERS_PROMOVIDOS = [
         { label: 'Nombres', property: 'nombres', renderer: null },
         { label: 'Apellidos', property: 'apellidos', renderer: null },
@@ -19,6 +19,15 @@ class ReportesDAO {
         { label: 'Sección', property: 'seccion', renderer: null },
         { label: 'Edad', property: 'edad', renderer: null }
     ];
+    HEADERS_ENLACES = [
+        { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
+        { label: 'Nombres del Promotor', property: 'nombresPromotor', renderer: null },
+        { label: 'Calle', property: 'calle', renderer: null },
+        { label: 'Colonia', property: 'colonia', renderer: null },
+        { label: 'Teléfono', property: 'telefono', renderer: null },
+        { label: 'Mail', property: 'mail', renderer: null },
+        { label: 'Problematica', property: 'problematica', renderer: null},
+    ]
     FIELDS = [
         'nombres',
         'apellidos',
@@ -58,7 +67,7 @@ class ReportesDAO {
             const data = JSON.parse(JSON.stringify(promovidos))
             //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
 
-            const datas = this.remplazarNulos(data)
+            const datas = remplazarNulos(data)
 
 
             let doc = new PDFDocument({ margin: {...this.MARGIN_DOC}, size: 'A4' });
@@ -116,7 +125,7 @@ class ReportesDAO {
                 const data = JSON.parse(JSON.stringify(promovidos))
                 if (data.length > 0) {
                     //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
-                    const datas = this.remplazarNulos(data)
+                    const datas = remplazarNulos(data)
                     await this.addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
                 }
             }
@@ -151,7 +160,7 @@ class ReportesDAO {
             const data = JSON.parse(JSON.stringify(lstPromotores))
             if (data.length > 0) {
                 //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
-                const datas = this.remplazarNulos(data)
+                const datas = remplazarNulos(data)
                 const dataTable = datas.map(data => {
                     return {
                         nombres: data.Usuario.nombres,
@@ -165,7 +174,6 @@ class ReportesDAO {
                         edad: data.edad,
                     }
                 });
-
                 await this.addTable(doc, dataTable, `Promotores`, this.HEADERS_PROMOVIDOS)
             }
 
@@ -176,7 +184,6 @@ class ReportesDAO {
             throw ex;
         }
     }
-    
 
     async obtenerTodosEnlaces(res) {
         let response = {};
@@ -184,36 +191,37 @@ class ReportesDAO {
             var _enlaces = await Enlaces.findAll({
                 where: { activo: 1 },
                 include: [{
-                    association: 'Usuario',
+                    association: 'Promotor',
+                    include: [
+                        { association: 'Usuario' }
+                    ]
                 }]
             })
             const lstEnlaces = JSON.parse(JSON.stringify(_enlaces))
             let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
             doc.pipe(res);
-
+            
             await this.addHeaderDoc(doc)
-
+            
             doc.on('pageAdded', async () => {
                 await this.addHeaderDoc(doc)
             })
-
+            
             const data = JSON.parse(JSON.stringify(lstEnlaces))
             if (data.length > 0) {
-                const datas = this.remplazarNulos(data)
+                const datas = remplazarNulos(data)
                 const dataTable = datas.map(data => {
                     return {
-                        nombres: data.Usuario.nombres,
-                        apellidos: data.Usuario.apellidos,
+                        nombresEnlace: data.nombres,
+                        nombresPromotor: data.Promotor.Usuario.nombres + ' ' +data.Promotor.Usuario.apellidos,
                         calle: data.calle,
                         colonia: data.colonia,
-                        cp: data.cp,
-                        telefono: data.Usuario.telefono,
-                        mail: data.Usuario.mail,
-                        seccion: data.seccion,
-                        edad: data.edad,
+                        telefono: data.telefono,
+                        mail: data.mail,
+                        problematica: data.problematica
                     }
                 });
-                await this.addTable(doc, dataTable, `Enlaces`, this.HEADERS_PROMOVIDOS )
+                await this.addTable(doc, dataTable, `Enlaces`, this.HEADERS_ENLACES )
             }
 
             doc.end();
@@ -222,16 +230,6 @@ class ReportesDAO {
             console.log(`error:::::::::::::::::::::`, ex.message)
             throw ex;
         }
-    }
-
-    remplazarNulos(data) {
-        data = data.map((item) => {
-            const _ = JSON.stringify(item,
-                (key, value) => (value === null) ? this.REPLACE_NULL : value
-            );
-            return JSON.parse(_)
-        })
-        return data
     }
 
     async addTable(doc, dataTable, title, headers) {

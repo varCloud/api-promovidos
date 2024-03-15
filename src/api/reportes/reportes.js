@@ -7,4 +7,5 @@ const { validateToken } = require("../token/tokenController");
 router.get('/promovidoPorPromotor/:id',validateToken ,ReportesController.obtenerPromovidosPorPromotor);
 router.get('/obtenerTodosPromovidos',validateToken ,ReportesController.obtenerTodosPromovidos);
 router.get('/obtenerTodosPromotores', validateToken, ReportesController.obtenerTodosPromotores);
+router.get('/obtenerTodosEnlaces', validateToken, ReportesController.obtenerTodosEnlaces);
 module.exports = router;

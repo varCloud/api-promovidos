@@ -4,6 +4,8 @@ const pathImagenDefault = "src/imgs/eventos/default.jpg";
 const db = require("../../config/database");
 const  {authenticator} = require('otplib');
 
+REPLACE_NULL = ' - - - ';
+
 function postDataInvalido(postData) {
     return {
         status: -1,
@@ -95,6 +97,16 @@ function generarOTP() {
     return authenticator.generate(secret);
 }
 
+function remplazarNulos(data) {
+    data = data.map((item) => {
+        const _ = JSON.stringify(item,
+            (key, value) => (value === null) ? this.REPLACE_NULL : value
+        );
+        return JSON.parse(_)
+    })
+    return data
+}
+
 
 enumGatewayProvider = {
     ALTAN: 1,
@@ -107,5 +119,6 @@ module.exports = {
     getIdService,
     getCredentialsOperatorByCustomer,
     generarOTP,
-    enumGatewayProvider
+    enumGatewayProvider,
+    remplazarNulos,
 }

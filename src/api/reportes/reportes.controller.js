@@ -25,6 +25,14 @@ class ReportesController {
             return res.status(500).json({ status: 500, message: err.message });
         }
     }
+
+    async obtenerTodosEnlaces(req, res) {
+        try {
+            await ReportesDAO.obtenerTodosEnlaces(res)
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+    }
     
    
 }
