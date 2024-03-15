@@ -4,6 +4,7 @@ const PDFDocument = require("pdfkit-table");
 const db = require("../config/database");
 const Promotores = require("../Models/promotores.model");
 const { Op } = require("sequelize");
+const Enlaces = require("../Models/enlaces.model");
 
 class ReportesDAO {
     REPLACE_NULL = ' - - - ';
@@ -57,12 +58,7 @@ class ReportesDAO {
             const data = JSON.parse(JSON.stringify(promovidos))
             //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
 
-            const datas = data.map((item) => {
-                const _ = JSON.stringify(item,
-                    (key, value) => (value === null) ? this.REPLACE_NULL : value
-                );
-                return JSON.parse(_)
-            })
+            const datas = this.remplazarNulos(data)
 
 
             let doc = new PDFDocument({ margin: {...this.MARGIN_DOC}, size: 'A4' });
@@ -75,17 +71,7 @@ class ReportesDAO {
             })
 
             doc.pipe(res)
-            const table = {
-                title: `Promovidos del promotor:  ${promotor.Usuario.nombres}`,
-                headers: this.HEADERS_PROMOVIDOS,
-                datas: datas
-            };
-
-            doc.on('pageAdded', async () => {
-                await doc.image('./src/assets/logo.png', 420, 25, { width: 150, height: 50 })
-            })
-
-            await doc.table(table)
+            await this.addTable(doc, datas, `Promovidos del promotor:  ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
             doc.end();
 
 
@@ -130,20 +116,8 @@ class ReportesDAO {
                 const data = JSON.parse(JSON.stringify(promovidos))
                 if (data.length > 0) {
                     //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
-                    const datas = data.map((item) => {
-                        const _ = JSON.stringify(item,
-                            (key, value) => (value === null) ? this.REPLACE_NULL : value
-                        );
-                        return JSON.parse(_)
-                    })
-
-                    const table = {
-                        title: `Promovidos del promotor: ${promotor.Usuario.nombres}`,
-                        headers: this.HEADERS_PROMOVIDOS,
-                        datas: datas,
-                    };
-                    await doc.table(table)
-                    await doc.addPage()
+                    const datas = this.remplazarNulos(data)
+                    await this.addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
                 }
             }
             doc.end();
@@ -177,12 +151,7 @@ class ReportesDAO {
             const data = JSON.parse(JSON.stringify(lstPromotores))
             if (data.length > 0) {
                 //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
-                const datas = data.map((item) => {
-                    const _ = JSON.stringify(item,
-                        (key, value) => (value === null) ? this.REPLACE_NULL : value
-                    );
-                    return JSON.parse(_)
-                })
+                const datas = this.remplazarNulos(data)
                 const dataTable = datas.map(data => {
                     return {
                         nombres: data.Usuario.nombres,
@@ -196,14 +165,8 @@ class ReportesDAO {
                         edad: data.edad,
                     }
                 });
-                const table = {
-                    title: `Promotores`,
-                    headers: this.HEADERS_PROMOVIDOS,
-                    datas: dataTable,
-                };
-                console.log(dataTable)
-                await doc.table(table)
-                await doc.addPage()
+
+                await this.addTable(doc, dataTable, `Promotores`, this.HEADERS_PROMOVIDOS)
             }
 
             doc.end();
@@ -213,6 +176,74 @@ class ReportesDAO {
             throw ex;
         }
     }
+    
+
+    async obtenerTodosEnlaces(res) {
+        let response = {};
+        try {
+            var _enlaces = await Enlaces.findAll({
+                where: { activo: 1 },
+                include: [{
+                    association: 'Usuario',
+                }]
+            })
+            const lstEnlaces = JSON.parse(JSON.stringify(_enlaces))
+            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
+            doc.pipe(res);
+
+            await this.addHeaderDoc(doc)
+
+            doc.on('pageAdded', async () => {
+                await this.addHeaderDoc(doc)
+            })
+
+            const data = JSON.parse(JSON.stringify(lstEnlaces))
+            if (data.length > 0) {
+                const datas = this.remplazarNulos(data)
+                const dataTable = datas.map(data => {
+                    return {
+                        nombres: data.Usuario.nombres,
+                        apellidos: data.Usuario.apellidos,
+                        calle: data.calle,
+                        colonia: data.colonia,
+                        cp: data.cp,
+                        telefono: data.Usuario.telefono,
+                        mail: data.Usuario.mail,
+                        seccion: data.seccion,
+                        edad: data.edad,
+                    }
+                });
+                await this.addTable(doc, dataTable, `Enlaces`, this.HEADERS_PROMOVIDOS )
+            }
+
+            doc.end();
+            return response;
+        } catch (ex) {
+            console.log(`error:::::::::::::::::::::`, ex.message)
+            throw ex;
+        }
+    }
+
+    remplazarNulos(data) {
+        data = data.map((item) => {
+            const _ = JSON.stringify(item,
+                (key, value) => (value === null) ? this.REPLACE_NULL : value
+            );
+            return JSON.parse(_)
+        })
+        return data
+    }
+
+    async addTable(doc, dataTable, title, headers) {
+        const table = {
+            title: title,
+            headers: headers,
+            datas: dataTable,
+        };
+        await doc.table(table)
+        await doc.addPage()
+    }
+
     async addHeaderDoc(doc) {
         await doc.image('./src/assets/logo.png', 420, 25, { width: 130, height: 50 })
     }
