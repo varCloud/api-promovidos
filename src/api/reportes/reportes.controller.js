@@ -41,6 +41,14 @@ class ReportesController {
             return res.status(500).json({ status: 500, message: err.message });
         }
    }
+   async obtenerPromovidos(req, res) {
+    try {
+        await ReportesDAO.obtenerPromovidos(res)
+    } catch (err) {
+        return res.status(500).json({ status: 500, message: err.message });
+    }
+}
+
 }
 
 module.exports = new ReportesController()

@@ -3,8 +3,9 @@ const pathDestino = "src/imgs/eventos";
 const pathImagenDefault = "src/imgs/eventos/default.jpg";
 const db = require("../../config/database");
 const  {authenticator} = require('otplib');
+const PDFDocument = require("pdfkit-table");
+const DETAILS_PAGE_PDF = require('../../constants/detailsPagePDF')
 
-REPLACE_NULL = ' - - - ';
 
 function postDataInvalido(postData) {
     return {
@@ -100,13 +101,38 @@ function generarOTP() {
 function remplazarNulos(data) {
     data = data.map((item) => {
         const _ = JSON.stringify(item,
-            (key, value) => (value === null) ? this.REPLACE_NULL : value
+            (key, value) => (value === null) ? DETAILS_PAGE_PDF.REPLACE_NULL : value
         );
         return JSON.parse(_)
     })
     return data
 }
 
+async function initDoc(res){
+    let doc = new PDFDocument({ margins: { ...DETAILS_PAGE_PDF.MARGIN_DOC }, size: 'A4' });
+    doc.pipe(res);
+    
+    await addHeaderDoc(doc)
+    
+    doc.on('pageAdded', async () => {
+        await addHeaderDoc(doc)
+    })
+    return doc
+}
+
+async function addTable(doc, dataTable, title, headers) {
+    const table = {
+        title: title,
+        headers: headers,
+        datas: dataTable,
+    };
+    await doc.table(table)
+    await doc.addPage()
+}
+
+async function addHeaderDoc(doc) {
+    await doc.image(DETAILS_PAGE_PDF.LOGO_BLUE_CLOUD, 420, 25, { width: 130, height: 50 })
+}
 
 enumGatewayProvider = {
     ALTAN: 1,
@@ -121,4 +147,7 @@ module.exports = {
     generarOTP,
     enumGatewayProvider,
     remplazarNulos,
+    initDoc,
+    addTable,
+    addHeaderDoc,
 }

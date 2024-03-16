@@ -1,60 +1,13 @@
 const Promovidos = require("../Models/promovidos.model");
-const fs = require("fs");
-const PDFDocument = require("pdfkit-table");
-const db = require("../config/database");
 const Promotores = require("../Models/promotores.model");
 const { Op } = require("sequelize");
 const Enlaces = require("../Models/enlaces.model");
-const { remplazarNulos } = require("../api/Utilerias/utils")
-const EnlaceDAO = require("./enlacesDAO")
+const { remplazarNulos, initDoc, addTable } = require("../api/Utilerias/utils")
+const HEADERS_CONSTANTS = require('../constants/headersTable')
 class ReportesDAO {
-    HEADERS_PROMOVIDOS = [
-        { label: 'Nombres', property: 'nombres', renderer: null },
-        { label: 'Apellidos', property: 'apellidos', renderer: null },
-        { label: 'Calle', property: 'calle', renderer: null },
-        { label: 'Colonia', property: 'colonia', renderer: null },
-        { label: 'C.P.', property: 'cp', renderer: null },
-        { label: 'Teléfono', property: 'telefono', renderer: null },
-        { label: 'Mail', property: 'mail', renderer: null },
-        { label: 'Sección', property: 'seccion', renderer: null },
-        { label: 'Edad', property: 'edad', renderer: null }
-    ];
-    HEADERS_ENLACES = [
-        { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
-        { label: 'Nombres del Promotor', property: 'nombresPromotor', renderer: null },
-        { label: 'Calle', property: 'calle', renderer: null },
-        { label: 'Colonia', property: 'colonia', renderer: null },
-        { label: 'Teléfono', property: 'telefono', renderer: null },
-        { label: 'Mail', property: 'mail', renderer: null },
-        { label: 'Problematica', property: 'problematica', renderer: null},
-    ]
-    HEADERS_ENLACES_POR_PROMOTOR = [
-        { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
-        { label: 'Calle', property: 'calle', renderer: null },
-        { label: 'Colonia', property: 'colonia', renderer: null },
-        { label: 'Teléfono', property: 'telefono', renderer: null },
-        { label: 'Mail', property: 'mail', renderer: null },
-        { label: 'Problematica', property: 'problematica', renderer: null},
-    ]
-    FIELDS = [
-        'nombres',
-        'apellidos',
-        'calle',
-        'colonia',
-        'cp',
-        'telefono',
-        'mail',
-        'seccion',
-        `edad`
-    ];
+    
     PATH_DIRECTORY = 'src/reportes/promovidos'
-    MARGIN_DOC = {
-        top: 85,
-        bottom: 30,
-        left: 30,
-        right: 30
-    }
-
+    
     async obtenerPromovidosPorPromotor(idPromotor, res) {
         let response = {};
         try {
@@ -76,19 +29,8 @@ class ReportesDAO {
             //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
 
             const datas = remplazarNulos(data)
-
-
-            let doc = new PDFDocument({ margin: {...this.MARGIN_DOC}, size: 'A4' });
-            // doc.pipe(fs.createWriteStream(`${this.PATH_DIRECTORY}/PromovidoXPromotor.pdf`)); // PARA HACER PRUEBAS LOCALES
-            
-            await this.addHeaderDoc(doc)
-
-            doc.on('pageAdded', async () => {
-                await this.addHeaderDoc(doc)
-            })
-
-            doc.pipe(res)
-            await this.addTable(doc, datas, `Promovidos del promotor:  ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
+            let doc = await initDoc(res)
+            await addTable(doc, datas, `Promovidos del promotor:  ${promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_PROMOTORES)
             doc.end();
 
 
@@ -110,14 +52,7 @@ class ReportesDAO {
             })
             const lstPromotores = JSON.parse(JSON.stringify(_promotores))
 
-            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
-            doc.pipe(res);
-
-            await this.addHeaderDoc(doc)
-
-            doc.on('pageAdded', async () => {
-                await this.addHeaderDoc(doc)
-            })
+            let doc = await initDoc(res)
 
             for (const promotor of lstPromotores) {
                 var promovidos = await Promovidos.findAll({
@@ -134,7 +69,7 @@ class ReportesDAO {
                 if (data.length > 0) {
                     //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
                     const datas = remplazarNulos(data)
-                    await this.addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
+                    await addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_PROMOTORES)
                 }
             }
             doc.end();
@@ -156,14 +91,7 @@ class ReportesDAO {
             })
             const lstPromotores = JSON.parse(JSON.stringify(_promotores))
             console.log(_promotores)
-            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
-            doc.pipe(res);
-
-            await this.addHeaderDoc(doc)
-
-            doc.on('pageAdded', async () => {
-                await this.addHeaderDoc(doc)
-            })
+            let doc = await initDoc(res)
 
             const data = JSON.parse(JSON.stringify(lstPromotores))
             if (data.length > 0) {
@@ -182,7 +110,7 @@ class ReportesDAO {
                         edad: data.edad,
                     }
                 });
-                await this.addTable(doc, dataTable, `Promotores`, this.HEADERS_PROMOVIDOS)
+                await addTable(doc, dataTable, `Promotores`, HEADERS_CONSTANTS.HEADERS_PROMOTORES)
             }
 
             doc.end();
@@ -206,15 +134,8 @@ class ReportesDAO {
                 }]
             })
             const lstEnlaces = JSON.parse(JSON.stringify(_enlaces))
-            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
-            doc.pipe(res);
-            
-            await this.addHeaderDoc(doc)
-            
-            doc.on('pageAdded', async () => {
-                await this.addHeaderDoc(doc)
-            })
-            
+            let doc = await initDoc(res)
+
             const data = JSON.parse(JSON.stringify(lstEnlaces))
             if (data.length > 0) {
                 const datas = remplazarNulos(data)
@@ -230,7 +151,7 @@ class ReportesDAO {
                         problematica: data.problematica
                     }
                 });
-                await this.addTable(doc, dataTable, `Enlaces`, this.HEADERS_ENLACES )
+                await addTable(doc, dataTable, `Enlaces`, HEADERS_CONSTANTS.HEADERS_ENLACES )
             }
 
             doc.end();
@@ -253,14 +174,7 @@ class ReportesDAO {
                 }]
             })
             const lstEnlaces = JSON.parse(JSON.stringify(_enlaces))
-            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
-            doc.pipe(res);
-            
-            await this.addHeaderDoc(doc)
-            
-            doc.on('pageAdded', async () => {
-                await this.addHeaderDoc(doc)
-            })
+            let doc = await initDoc(res)
             
             const data = JSON.parse(JSON.stringify(lstEnlaces))
             if (data.length > 0) {
@@ -276,7 +190,7 @@ class ReportesDAO {
                         problematica: data.problematica
                     }
                 });
-                await this.addTable(doc, dataTable, `Enlaces de: ${data[0].Promotor.Usuario.nombres}`, this.HEADERS_ENLACES_POR_PROMOTOR )
+                await addTable(doc, dataTable, `Enlaces de: ${data[0].Promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_ENLACES_POR_PROMOTOR )
             }
 
             doc.end();
@@ -286,19 +200,54 @@ class ReportesDAO {
             throw ex;
         }
     }
-    async addTable(doc, dataTable, title, headers) {
-        const table = {
-            title: title,
-            headers: headers,
-            datas: dataTable,
-        };
-        await doc.table(table)
-        await doc.addPage()
+
+    async obtenerPromovidos(res) {
+        let response = {};
+        try {
+            var _promovidos = await Promovidos.findAll({
+                where: { activo: 1 },
+                include: [
+                    {
+                        association: 'Promotor',
+                        include:[
+                            {association:'Usuario'}
+                        ]
+                    }
+                ]
+            })
+            const lstPromovidos = JSON.parse(JSON.stringify(_promovidos))
+            let doc = await initDoc(res)
+            
+            const data = JSON.parse(JSON.stringify(lstPromovidos))
+            if (data.length > 0) {
+                const datas = remplazarNulos(data)
+                const dataTable = datas.map((data) => {
+                    return {
+                        nombrePromovido: data.nombres + ' ' + data.apellidos,
+                        nombrePromotor: data.Promotor.Usuario.nombres + ' ' + data.Promotor.Usuario.apellidos,
+                        calle: data.calle,
+                        colonia: data.colonia,
+                        cp: data.cp,
+                        telefono: data.telefono,
+                        mail: data.mail,
+                        seccion: data.seccion,
+                        genero: data.genero,
+                        edad: data.edad,
+                    }
+                })
+                // datas.nombrePromovido = data.nombres + ' ' + data.apellidos
+                // datas.nombrePromotor = data.Promotor.Usuario.nombres + ' ' + data.Promotor.Usuario.apellidos
+                await addTable(doc, dataTable, `Promovidos`, HEADERS_CONSTANTS.HEADERS_PROMOVIDOS)
+            }
+
+            doc.end();
+            return response;
+        } catch (ex) {
+            console.log(`error:::::::::::::::::::::`, ex.message)
+            throw ex;
+        }
     }
 
-    async addHeaderDoc(doc) {
-        await doc.image('./src/assets/logo.png', 420, 25, { width: 130, height: 50 })
-    }
 }
 
 module.exports = new ReportesDAO();
