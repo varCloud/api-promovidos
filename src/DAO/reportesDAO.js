@@ -8,7 +8,7 @@ const Enlaces = require("../Models/enlaces.model");
 const { remplazarNulos } = require("../api/Utilerias/utils")
 const EnlaceDAO = require("./enlacesDAO")
 class ReportesDAO {
-    HEADERS_PROMOVIDOS = [
+    HEADERS_PROMOTORES = [
         { label: 'Nombres', property: 'nombres', renderer: null },
         { label: 'Apellidos', property: 'apellidos', renderer: null },
         { label: 'Calle', property: 'calle', renderer: null },
@@ -35,6 +35,19 @@ class ReportesDAO {
         { label: 'Teléfono', property: 'telefono', renderer: null },
         { label: 'Mail', property: 'mail', renderer: null },
         { label: 'Problematica', property: 'problematica', renderer: null},
+    ]
+    HEADERS_PROMOVIDOS = [
+        { label: 'Nombre Promovido', property: 'nombrePromovido', renderer: null },
+        { label: 'Nombre Promotor', property: 'nombrePromotor', renderer: null },
+        { label: 'Calle', property: 'calle', renderer: null },
+        { label: 'Colonia', property: 'colonia', renderer: null },
+        { label: 'C.P.', property: 'cp', renderer: null },
+        { label: 'Teléfono', property: 'telefono', renderer: null },
+        { label: 'Mail', property: 'mail', renderer: null },
+        { label: 'Seccion', property: 'seccion', renderer: null },
+        { label: 'Genero', property: 'genero', renderer: null },
+        { label: 'Edad', property: 'edad', renderer: null },
+        { label: 'Vota', property: 'vota', renderer: null },
     ]
     FIELDS = [
         'nombres',
@@ -88,7 +101,7 @@ class ReportesDAO {
             })
 
             doc.pipe(res)
-            await this.addTable(doc, datas, `Promovidos del promotor:  ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
+            await this.addTable(doc, datas, `Promovidos del promotor:  ${promotor.Usuario.nombres}`, this.HEADERS_PROMOTORES)
             doc.end();
 
 
@@ -134,7 +147,7 @@ class ReportesDAO {
                 if (data.length > 0) {
                     //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
                     const datas = remplazarNulos(data)
-                    await this.addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, this.HEADERS_PROMOVIDOS)
+                    await this.addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, this.HEADERS_PROMOTORES)
                 }
             }
             doc.end();
@@ -182,7 +195,7 @@ class ReportesDAO {
                         edad: data.edad,
                     }
                 });
-                await this.addTable(doc, dataTable, `Promotores`, this.HEADERS_PROMOVIDOS)
+                await this.addTable(doc, dataTable, `Promotores`, this.HEADERS_PROMOTORES)
             }
 
             doc.end();
@@ -277,6 +290,61 @@ class ReportesDAO {
                     }
                 });
                 await this.addTable(doc, dataTable, `Enlaces de: ${data[0].Promotor.Usuario.nombres}`, this.HEADERS_ENLACES_POR_PROMOTOR )
+            }
+
+            doc.end();
+            return response;
+        } catch (ex) {
+            console.log(`error:::::::::::::::::::::`, ex.message)
+            throw ex;
+        }
+    }
+
+    async obtenerPromovidos(res) {
+        let response = {};
+        try {
+            var _promovidos = await Promovidos.findAll({
+                where: { activo: 1 },
+                include: [
+                    {
+                        association: 'Promotor',
+                        include:[
+                            {association:'Usuario'}
+                        ]
+                    }
+                ]
+            })
+            const lstPromovidos = JSON.parse(JSON.stringify(_promovidos))
+            let doc = new PDFDocument({ margins: { ...this.MARGIN_DOC }, size: 'A4' });
+            doc.pipe(res);
+            
+            await this.addHeaderDoc(doc)
+            
+            doc.on('pageAdded', async () => {
+                await this.addHeaderDoc(doc)
+            })
+            
+            const data = JSON.parse(JSON.stringify(lstPromovidos))
+            if (data.length > 0) {
+                const datas = remplazarNulos(data)
+                const dataTable = datas.map((data) => {
+                    return {
+                        nombrePromovido: data.nombres + ' ' + data.apellidos,
+                        nombrePromotor: data.Promotor.Usuario.nombres + ' ' + data.Promotor.Usuario.apellidos,
+                        calle: data.calle,
+                        colonia: data.colonia,
+                        cp: data.cp,
+                        telefono: data.telefono,
+                        mail: data.mail,
+                        seccion: data.seccion,
+                        genero: data.genero,
+                        edad: data.edad,
+                        vota: data.vota,
+                    }
+                })
+                // datas.nombrePromovido = data.nombres + ' ' + data.apellidos
+                // datas.nombrePromotor = data.Promotor.Usuario.nombres + ' ' + data.Promotor.Usuario.apellidos
+                await this.addTable(doc, dataTable, `Promovidos`, this.HEADERS_PROMOVIDOS)
             }
 
             doc.end();
