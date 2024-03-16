@@ -1,0 +1,53 @@
+module.exports = {
+  HEADERS_PROMOTORES :[
+    { label: 'Nombres', property: 'nombres', renderer: null },
+    { label: 'Apellidos', property: 'apellidos', renderer: null },
+    { label: 'Calle', property: 'calle', renderer: null },
+    { label: 'Colonia', property: 'colonia', renderer: null },
+    { label: 'C.P.', property: 'cp', renderer: null },
+    { label: 'Teléfono', property: 'telefono', renderer: null },
+    { label: 'Mail', property: 'mail', renderer: null },
+    { label: 'Sección', property: 'seccion', renderer: null },
+    { label: 'Edad', property: 'edad', renderer: null }
+  ],
+  HEADERS_ENLACES: [
+    { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
+    { label: 'Nombres del Promotor', property: 'nombresPromotor', renderer: null },
+    { label: 'Calle', property: 'calle', renderer: null },
+    { label: 'Colonia', property: 'colonia', renderer: null },
+    { label: 'Teléfono', property: 'telefono', renderer: null },
+    { label: 'Mail', property: 'mail', renderer: null },
+    { label: 'Problematica', property: 'problematica', renderer: null},
+  ],
+  HEADERS_ENLACES_POR_PROMOTOR: [
+    { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
+    { label: 'Calle', property: 'calle', renderer: null },
+    { label: 'Colonia', property: 'colonia', renderer: null },
+    { label: 'Teléfono', property: 'telefono', renderer: null },
+    { label: 'Mail', property: 'mail', renderer: null },
+    { label: 'Problematica', property: 'problematica', renderer: null},
+  ],
+  HEADERS_PROMOVIDOS: [
+    { label: 'Nombre Promovido', property: 'nombrePromovido', renderer: null },
+    { label: 'Nombre Promotor', property: 'nombrePromotor', renderer: null },
+    { label: 'Calle', property: 'calle', renderer: null },
+    { label: 'Colonia', property: 'colonia', renderer: null },
+    { label: 'C.P.', property: 'cp', renderer: null },
+    { label: 'Teléfono', property: 'telefono', renderer: null },
+    { label: 'Mail', property: 'mail', renderer: null },
+    { label: 'Seccion', property: 'seccion', renderer: null },
+    { label: 'Genero', property: 'genero', renderer: null },
+    { label: 'Edad', property: 'edad', renderer: null },
+  ],
+  FIELDS: [
+    'nombres',
+    'apellidos',
+    'calle',
+    'colonia',
+    'cp',
+    'telefono',
+    'mail',
+    'seccion',
+    `edad`
+  ],
+}
