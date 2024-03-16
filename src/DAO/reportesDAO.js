@@ -47,7 +47,6 @@ class ReportesDAO {
         { label: 'Seccion', property: 'seccion', renderer: null },
         { label: 'Genero', property: 'genero', renderer: null },
         { label: 'Edad', property: 'edad', renderer: null },
-        { label: 'Vota', property: 'vota', renderer: null },
     ]
     FIELDS = [
         'nombres',
@@ -339,7 +338,6 @@ class ReportesDAO {
                         seccion: data.seccion,
                         genero: data.genero,
                         edad: data.edad,
-                        vota: data.vota,
                     }
                 })
                 // datas.nombrePromovido = data.nombres + ' ' + data.apellidos
