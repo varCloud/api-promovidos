@@ -148,7 +148,8 @@ class ReportesDAO {
                         colonia: data.colonia,
                         telefono: data.telefono,
                         mail: data.mail,
-                        problematica: data.problematica
+                        problematica: data.problematica,
+                        informacion : `Nombre: ${(data.nombres)} \nCalle: ${(data.calle)} \nColonia: ${(data.colonia)} \nTelefono: ${(data.telefono)} \nMail ${data.mail} \n`   
                     }
                 });
                 await addTable(doc, dataTable, `Enlaces`, HEADERS_CONSTANTS.HEADERS_ENLACES )
@@ -180,17 +181,17 @@ class ReportesDAO {
             if (data.length > 0) {
                 const datas = remplazarNulos(data)
                 const dataTable = datas.map(data => {
-                    console.log(data)
                     return {
                         nombresEnlace: data.nombres,
                         calle: data.calle,
                         colonia: data.colonia,
                         telefono: data.telefono,
                         mail: data.mail,
-                        problematica: data.problematica
+                        problematica: data.problematica,
+                        informacion : `Nombre: ${(data.nombres)} \nCalle: ${(data.calle)} \nColonia: ${(data.colonia)} \nTelefono: ${(data.telefono)} \nMail ${data.mail} \n`
                     }
                 });
-                await addTable(doc, dataTable, `Enlaces de: ${data[0].Promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_ENLACES_POR_PROMOTOR )
+                await addTable(doc, dataTable, `Enlaces de: ${data[0].Promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_ENLACES )
             }
 
             doc.end();
@@ -235,8 +236,6 @@ class ReportesDAO {
                         edad: data.edad,
                     }
                 })
-                // datas.nombrePromovido = data.nombres + ' ' + data.apellidos
-                // datas.nombrePromotor = data.Promotor.Usuario.nombres + ' ' + data.Promotor.Usuario.apellidos
                 await addTable(doc, dataTable, `Promovidos`, HEADERS_CONSTANTS.HEADERS_PROMOVIDOS)
             }
 

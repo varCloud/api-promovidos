@@ -11,12 +11,15 @@ module.exports = {
     { label: 'Edad', property: 'edad', renderer: null }
   ],
   HEADERS_ENLACES: [
-    { label: 'Nombres del Enlace', property: 'nombresEnlace', renderer: null },
-    { label: 'Nombres del Promotor', property: 'nombresPromotor', renderer: null },
-    { label: 'Calle', property: 'calle', renderer: null },
-    { label: 'Colonia', property: 'colonia', renderer: null },
-    { label: 'Teléfono', property: 'telefono', renderer: null },
-    { label: 'Mail', property: 'mail', renderer: null },
+    // { label: 'Nombres del Enlace', property: 'nombresEnlace', 
+    //   renderer: (value, indexColumn, indexRow, row) => { return ` \n Nombre: ${(row.nombresEnlace)}  Calle: ${(row.calle)}  Colonia: ${(row.colonia)}    Telefono: ${(row.telefono)}  Mail ${row.mail} \n` } 
+    // },
+    // { label: 'Nombres del Promotor', property: 'nombresPromotor', renderer: null },
+    // { label: 'Calle', property: 'calle', renderer: null },
+    // { label: 'Colonia', property: 'colonia', renderer: null },
+    // { label: 'Teléfono', property: 'telefono', renderer: null },
+    // { label: 'Mail', property: 'mail', renderer: null },
+    { label: 'Información', property: 'informacion', renderer: null },
     { label: 'Problematica', property: 'problematica', renderer: null},
   ],
   HEADERS_ENLACES_POR_PROMOTOR: [

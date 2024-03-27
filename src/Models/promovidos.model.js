@@ -66,7 +66,22 @@ const   Promovidos = sequelizeCrm.define('Promovidos', {
     },
     creadoPor:{
         type: DataTypes.INTEGER
-    }
+    },
+    latitud: {
+        type: DataTypes.STRING
+    },
+    longitud: {
+        type: DataTypes.STRING
+    },
+    direccionMapa: {
+        type: DataTypes.STRING
+    },
+    placeId: {
+        type: DataTypes.STRING
+    },
+    idRol: {
+        type: DataTypes.INTEGER
+    },
 }, {
     timestamps: false
 });

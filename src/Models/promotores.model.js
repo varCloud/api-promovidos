@@ -47,7 +47,20 @@ const Promotores = sequelizeCrm.define('promotores', {
     },
     activo:{
         type: DataTypes.BOOLEAN
-    }
+    },
+    latitud: {
+        type: DataTypes.STRING
+    },
+    longitud: {
+        type: DataTypes.STRING
+    },
+    direccionMapa: {
+        type: DataTypes.STRING
+    },
+    placeId: {
+        type: DataTypes.STRING
+    },
+
 }, {
     timestamps: false
 });
