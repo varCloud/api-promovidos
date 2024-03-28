@@ -13,7 +13,7 @@ class CasillasController {
     
     async getCasillas(req, res) {
         try {
-            let data = await CasillasDAO.obtenerCasillas()
+            let data = await CasillasDAO.obtenerCasillas(req.params)
             res.status(200).json(data);
         } catch (err) {
             return res.status(500).json({ status: 500, message: err.message });

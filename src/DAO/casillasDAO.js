@@ -8,7 +8,7 @@ class CasillasDAO {
       casilla.idUsuario = casilla.usuarioSession.idUsuario;
       await Casillas.create(casilla, { isNewRecord: true });
       const casillaActual = await Casillas.findOne({
-        order: [["idEnlace", "DESC"]],
+        order: [["idCasilla", "DESC"]],
       });
       return casillaActual;
     } catch (error) {
@@ -17,8 +17,9 @@ class CasillasDAO {
   }
 
   async obtenerCasillas(params) {
+    console.log('params<><><><>',params.id)
     try {
-      let options = params
+      let options = params.id
         ? {
             [Op.eq]: params.id,
           }
@@ -43,11 +44,11 @@ class CasillasDAO {
 
   async actualizarCasilla(casilla) {
     try {
-      let enlaceCasilla = await Casillas.update(
+      let casillaActual = await Casillas.update(
         { ...casilla },
-        { logging: true, where: { idCasilla: enlace.idCasilla } }
+        { logging: true, where: { idCasilla: casilla.idCasilla } }
       );
-      return enlaceCasilla;
+      return casillaActual;
     } catch (error) {
       console.log(error.message);
       throw error;

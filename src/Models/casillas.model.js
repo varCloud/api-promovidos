@@ -2,8 +2,8 @@ const { DataTypes } = require("sequelize");
 const sequelizeCrm = require("../config/sequelize.crm");
 const Usuarios = require("./usuario.model");
 
-const Enlaces = sequelizeCrm.define(
-  "Enlaces",
+const Casillas = sequelizeCrm.define(
+  "Casillas",
   {
     // Model attributes are defined here
     idCasilla: {
@@ -11,7 +11,22 @@ const Enlaces = sequelizeCrm.define(
       allowNull: true,
       primaryKey: true,
     },
-
+    distritoLocal: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    municipio: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    seccion: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+    },
+    tipoSeccion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     padronElectoral: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -67,5 +82,5 @@ const Enlaces = sequelizeCrm.define(
   }
 );
 
-Enlaces.belongsTo(Usuarios, { as: "CreadoPor", foreignKey: "idUsuario" });
-module.exports = Enlaces;
+Casillas.belongsTo(Usuarios, { as: "CreadoPor", foreignKey: "idUsuario" });
+module.exports = Casillas;
