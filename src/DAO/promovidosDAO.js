@@ -1,6 +1,4 @@
-const PromotorModel = require('../Models/promotores.model');
 const Promovidos = require('../Models/promovidos.model');
-const UsuarioModel = require('../Models/usuario.model');
 const { Op } = require("sequelize");
 class PromovidoDAO {
 

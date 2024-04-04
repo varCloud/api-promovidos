@@ -40,28 +40,6 @@ app.get('/', function(req, res) {
     res.send('Ready for TO DO APi...!! XD');
 });
 
-app.use("/token", require("./api/token/token"));
-app.use("/echo", require("./api/echo/echo"));
-app.use("/catalogo", require("./api/catalogo/catalogo"));
-app.use("/usuario", require("./api/usuario/usuario"))
-app.use("/intereses", require("./api/intereses/intereses"));
-app.use("/tipoCliente", require("./api/tipoCliente/tipoCliente"));
-app.use("/tiposervicios", require("./api/tiposervicios/tiposervicios"));
-app.use("/instructores", require("./api/instructores/instructores"));
-app.use("/tipoSeguimiento", require("./api/tipoSeguimiento/tipoSeguimiento"));
-
-app.use("/ventas", require('./api/ventas/ventas'))
-app.use("/csv/tipoSeguimiento", require("./api/csv/tipoSeguimiento/csv_tipoSeguimiento"));
-app.use("/csv/cursos", require("./api/csv/cursos/csv_cursos"))
-app.use("/csv/tipoCliente", require("./api/csv/tipoCliente/csv_tipoCliente"))
-app.use("/csv/catIntereses", require("./api/csv/catIntereses/csv_catIntereses"))
-app.use("/csv/tipoServicios", require("./api/csv/tipoServicios/csv_tipoServicios"))
-app.use("/csv/intereses", require("./api/csv/intereses/csv_intereses"))
-app.use("/csv/cliente", require("./api/csv/clientes/csv_clientes"))
-app.use("/csv/usuario", require("./api/csv/usuarios/csv_usuarios"))
-app.use("/roles", require("./api/roles/roles"))
-
-
 app.use("/promotores", require("./api/promotores/promotores"))
 app.use("/promovidos", require("./api/promovidos/promovidos"))
 app.use("/segumientosPromovidos", require("./api/seguiminetosPromovidos/seguiminetoPromovidos"))
