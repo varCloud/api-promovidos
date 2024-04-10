@@ -82,6 +82,12 @@ const   Promovidos = sequelizeCrm.define('Promovidos', {
     idRol: {
         type: DataTypes.INTEGER
     },
+    fueLlamado: {
+        type: DataTypes.BOOLEAN
+    },
+    observacionesLlamada: {
+        type: DataTypes.STRING
+    },
 }, {
     timestamps: false
 });
