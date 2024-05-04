@@ -4,7 +4,8 @@ class SeguimientoPromovidosDAO {
 
     async crearSegumientoPromovido(seguimiento) {
         try {
-            await SeguimientosPromovidos.create(seguimiento, { isNewRecord: true , logging:true })
+            console.log(`seguimiento:::::::::::::`,seguimiento)
+            await SeguimientosPromovidos.create({...seguimiento, creadoPor: seguimiento.usuarioSession.idUsuario}, { isNewRecord: true , logging:true })
             const currentSeguimiento = await SeguimientosPromovidos.findOne({
                 order: [
                     ['idSeguimientoPromovido', 'DESC']
@@ -36,7 +37,7 @@ class SeguimientoPromovidosDAO {
             let filter = { idSeguimientoPromovido: options }
             const promotores = await SeguimientosPromovidos.findAll({
                 order: [
-                    ['idSeguimientoPromovido', 'ASC']
+                    ['idSeguimientoPromovido', 'DESC']
                 ],
                 logging: true,
                 where: filter,
@@ -55,19 +56,26 @@ class SeguimientoPromovidosDAO {
         }
     }
 
-    async actualizarPromotor(promotor) {
+    async obtenerSeguimientosByPromovido(idPromovido) {
         try {
-            let promotorActual = await promotorModel.update({ ...promotor }, { logging: true, where: { idpromotor: promotor.idpromotor } })
-            return promotorActual;
-        } catch (error) {
-            throw error;
-        }
-    }
 
-    async eliminarPromotor(promotor) {
-        try {
-            let promotorActual = await promotorModel.update({ activo: 0 }, { logging: true, where: { idpromotor: promotor.idpromotor } })
-            return promotorActual;
+            let filter = { idPromovido: idPromovido , activo:1 }
+            const promotores = await SeguimientosPromovidos.findAll({
+                order: [
+                    ['idSeguimientoPromovido', 'DESC']
+                ],
+                logging: true,
+                where: filter,
+                include: [
+                    {
+                        association: 'Promovido'
+                    },
+                    {
+                        association: 'Usuario'
+                    }
+                ]
+            })
+            return promotores;
         } catch (error) {
             throw error;
         }

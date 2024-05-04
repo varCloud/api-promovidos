@@ -19,6 +19,15 @@ class SeguimientoPromovidoController {
             return res.status(500).json({ status: 500, message: err.message });
         }
     }
+
+    async obtenerSeguimientosByPromovido(req, res) {
+        try {
+            let data = await SeguimientosPromovidosDAO.obtenerSeguimientosByPromovido(req.params.id)
+            res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({ status: 500, message: err.message });
+        }
+    }
 }
 
 module.exports = new SeguimientoPromovidoController()

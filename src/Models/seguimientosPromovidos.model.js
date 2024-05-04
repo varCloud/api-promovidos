@@ -18,6 +18,11 @@ const SeguimientosPromovidos = sequelizeCrm.define('seguimientospromovidos', {
         type: DataTypes.STRING,
     },
 
+    vota: {
+        type: DataTypes.BOOLEAN,    
+    },
+
+
     fechaAlta: {
         type: DataTypes.DATE,
         allowNull:true
@@ -31,7 +36,8 @@ const SeguimientosPromovidos = sequelizeCrm.define('seguimientospromovidos', {
     idPromovido:{
         type: DataTypes.INTEGER
     },
-    idUsuario:{
+
+    creadoPor:{
         type: DataTypes.INTEGER
     }
 }, {
@@ -40,5 +46,5 @@ const SeguimientosPromovidos = sequelizeCrm.define('seguimientospromovidos', {
 
 
 SeguimientosPromovidos.belongsTo(Promovidos,{as: 'Promovido', foreignKey: 'idPromovido'});
-SeguimientosPromovidos.belongsTo(Usuarios,{as: 'Usuario', foreignKey: 'idUsuario'});
+SeguimientosPromovidos.belongsTo(Usuarios,{as: 'Usuario', foreignKey: 'creadoPor'});
 module.exports = SeguimientosPromovidos;
