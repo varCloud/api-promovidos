@@ -14,7 +14,7 @@ const Votos = sequelizeCrm.define('votos', {
     type: DataTypes.INTEGER
   },
   numeroVotos: {
-    type: DataTypes.INTEGER
+    type: DataTypes.FLOAT
   },
   idElecciones: {
     type: DataTypes.INTEGER
@@ -23,7 +23,7 @@ const Votos = sequelizeCrm.define('votos', {
     type: DataTypes.DATE
   },
   activo: {
-    type: DataTypes.INTEGER
+    type: DataTypes.TINYINT
   },
   idCasilla: {
     type: DataTypes.INTEGER
