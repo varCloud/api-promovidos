@@ -48,6 +48,7 @@ app.use("/dashboard", require("./api/dashboard/dashboard"))
 app.use("/enlaces", require("./api/enlaces/enlaces"))
 app.use("/reportes", require("./api/reportes/reportes"))
 app.use("/casillas", require("./api/casillas/casillas"))
+app.use("/coalicionesPartidos", require("./api/coalicionesPartidos/coalicionesPartidos"))
 
 const swaggerSpec = swaggerJSDoc({
     swaggerDefinition: {
