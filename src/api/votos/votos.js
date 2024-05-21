@@ -3,6 +3,7 @@ const router = Router();
 const VotosController = require("./votos.controller");
 const { validateToken } = require("../token/tokenController");
 
+router.post('/',validateToken, VotosController.crearVoto);
 router.get('/', validateToken, VotosController.getVotos);
 router.get("/:id", validateToken, VotosController.getVotos);
 router.put('/', validateToken, VotosController.actualizarVoto);

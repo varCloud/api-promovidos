@@ -25,7 +25,6 @@ class coalicionesPartidosDAO {
           },
         ],
       });
-      console.log('aqui toy');
       return coalicionPartidoActual;
     } catch (error) {
       throw error;

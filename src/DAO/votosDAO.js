@@ -3,6 +3,31 @@ const { Op } = require('sequelize')
 
 class VotosDAO {
 
+  async crearVoto(voto){
+    try{
+      voto.activo = 1
+      await Votos.create(voto, {isNewRecord:true})
+      const votoActual = await Votos.findAll({
+        order: [
+          ['idVoto', 'ASC']
+        ],
+        logging: true,
+        where: filter,
+        include: [
+          {
+            association: 'CoalicionPartido',
+          },
+          {
+            association: 'Casilla',
+          }
+        ]
+      })
+      return votoActual
+    }
+    catch( error){
+      throw error
+    }
+  }
   async obtenerVoto(params) {
     try {
       let options = params.id ? {
