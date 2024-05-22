@@ -11,52 +11,23 @@ class coalicionesPartidosDAO {
         group: ['idCoalicion']
       });
 
-      // Iterar sobre cada coalición y encontrar sus partidos asociados
-      const partidosPorCoalicion = await Promise.all(coaliciones.map(async (coalicion) => {
-        const idCoalicion = coalicion.idCoalicion;
+      let partidosPorCoalicion = coaliciones.map((col) => col.get({ plain: true }))
 
-        // Encontrar todos los partidos asociados a esta coalición
-        const partidos = await coalicionesPartidos.findAll({
-          where: {
-            idCoalicion: idCoalicion
-          },
+      partidosPorCoalicion = await Promise.all(partidosPorCoalicion.map(async (item) => {
+        const partidosFind = await coalicionesPartidos.findAll({
+          where: { idCoalicion: item.idCoalicion },
           include: [{
-            model: Partido,
-            required: true
-          }
-            ,
-          {
-            association: "Coaliciones",
-          },]
-        });
-        // Construir objeto de salida para esta coalición
-        return {
-          ...partidos[0].Coaliciones.dataValues,
-          partidos: partidos.map(partido => partido.catpartido)
-        };
-      }));
+            association: 'Partidos'
+          }]
+        })
+
+        const p = partidosFind.map((i) => i.get({ plain: true }))
+
+        item.partidos = p
+
+        return item
+      }))
       return partidosPorCoalicion
-      // let options = params.id
-      //   ? {
-      //     [Op.eq]: params.id,
-      //   }
-      //   : {
-      //     [Op.notIn]: 0,
-      //   };
-      // let filter = { idCoalicionPartido: options, activo: 1 };
-      // const coalicionPartidoActual = await coalicionesPartidos.findAll({
-      //   order: [["idCoalicionPartido", "Desc"]],
-      //   where: filter,
-      //   include: [
-      //     {
-      //       association: "Partidos",
-      //     },
-      //     {
-      //       association: "Coaliciones",
-      //     },
-      //   ],
-      // });
-      // return coalicionPartidoActual;
     } catch (error) {
       throw error;
     }
