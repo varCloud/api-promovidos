@@ -1,11 +1,16 @@
 const SeguimientosPromovidos = require('../Models/seguimientosPromovidos.model');
+const PromovidosDAO = require('./promovidosDAO')
 const { Op } = require("sequelize");
 class SeguimientoPromovidosDAO {
 
     async crearSegumientoPromovido(seguimiento) {
         try {
-            console.log(`seguimiento:::::::::::::`,seguimiento)
-            await SeguimientosPromovidos.create({...seguimiento, creadoPor: seguimiento.usuarioSession.idUsuario}, { isNewRecord: true , logging:true })
+            seguimiento.activo = 1
+            await SeguimientosPromovidos.create({ ...seguimiento, creadoPor: seguimiento.usuarioSession.idUsuario }, { isNewRecord: true, logging: true })
+            await PromovidosDAO.actualizarPromovido({
+                "idPromovido": seguimiento.idPromovido,
+                "vota": seguimiento.vota
+            })
             const currentSeguimiento = await SeguimientosPromovidos.findOne({
                 order: [
                     ['idSeguimientoPromovido', 'DESC']
@@ -18,7 +23,7 @@ class SeguimientoPromovidosDAO {
                         association: 'Usuario'
                     }
                 ],
-                logging:true
+                logging: true
             })
 
             return currentSeguimiento;
@@ -59,7 +64,7 @@ class SeguimientoPromovidosDAO {
     async obtenerSeguimientosByPromovido(idPromovido) {
         try {
 
-            let filter = { idPromovido: idPromovido , activo:1 }
+            let filter = { idPromovido: idPromovido, activo: 1 }
             const promotores = await SeguimientosPromovidos.findAll({
                 order: [
                     ['idSeguimientoPromovido', 'DESC']
