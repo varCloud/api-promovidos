@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelizeCrm = require('../config/sequelize.crm');
-const coalicionesPartidos = require('./coaliconesPartidos.model')
-const casillas = require('./casillas.model')
+const casillas = require('./casillas.model');
+const coaliciones = require('./coaliciones.model');
 
 const Votos = sequelizeCrm.define('votos', {
   idVoto: {
@@ -10,7 +10,8 @@ const Votos = sequelizeCrm.define('votos', {
     primaryKey: true,
     autoIncrement: true
   },
-  idCoalicionPartido: {
+
+  idCoalicion: {
     type: DataTypes.INTEGER
   },
   numeroVotos: {
@@ -32,7 +33,7 @@ const Votos = sequelizeCrm.define('votos', {
   timestamps: false
 })
 
-Votos.belongsTo(coalicionesPartidos, { as: 'CoalicionPartido', foreignKey: 'idCoalicionPartido' })
+Votos.belongsTo(coaliciones, { as: 'Coaliciones', foreignKey: 'idCoalicion' })
 Votos.belongsTo(casillas, { as: 'Casilla', foreignKey: 'idCasilla' })
 
 module.exports = Votos

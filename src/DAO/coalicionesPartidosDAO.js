@@ -19,14 +19,22 @@ class coalicionesPartidosDAO {
           include: [{
             association: 'Partidos'
           }]
-        })
+       })
 
+       const coalicionesFind = await coalicionesPartidos.findOne({
+          where: { idCoalicion: item.idCoalicion },
+          include: [{
+            association: 'Coaliciones'
+          }]
+       })
         const p = partidosFind.map((i) => i.get({ plain: true }))
-
-        item.partidos = p
+        const coal = coalicionesFind.get(({ plain: true }))
+        item.partidos = p.map((item)=> item.Partidos)
+        item = {...item , ...coal.Coaliciones , idCoalicionPartido :coal.idCoalicionPartido}
 
         return item
       }))
+
       return partidosPorCoalicion
     } catch (error) {
       throw error;
