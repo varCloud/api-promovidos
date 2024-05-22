@@ -112,7 +112,7 @@ class PromovidoDAO {
         })
     }
     async obtenerNoSabeVotantes() {
-        let filter = { activo: 1, vota: null }
+        let filter = { activo: 1, vota: 2 }
         return await Promovidos.count({
             order: [
                 ['idPromovido', 'ASC']
