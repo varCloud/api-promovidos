@@ -29,7 +29,7 @@ class VotosDAO {
         where: filter,
         include: [
           {
-            association: 'CoalicionPartido',
+            association: 'Coaliciones',
           },
           {
             association: 'Casilla',
@@ -42,9 +42,39 @@ class VotosDAO {
     }
   }
 
-  async actualizarVoto(voto) {
+  async obtenerVotoPorCasilla(params) {
+    try { 
+      let filter = { idCasilla: params.idCasilla, activo: 1 }
+      console.log(filter);
+      const votos = await Votos.findAll({
+        order: [
+          ['idVoto', 'ASC']
+        ],
+        logging: true,
+        where: filter,
+        include: [
+          {
+            association: 'Coaliciones',
+          },
+          {
+            association: 'Casilla',
+          }
+        ]
+      })
+      return votos;
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async actualizarVoto(params, voto) {
     try {
-      let votoActual = await Votos.update({ ...voto }, { where: { idVoto: voto.idVoto } })
+      const idCasilla = params.id
+      await Votos.update({ activo: 0 }, { where: { idCasilla: idCasilla } })
+      voto.idCasilla = idCasilla
+      console.log(voto);
+      let votoActual = await this.crearVoto([voto])
+      console.log(votoActual);
       return votoActual;
     } catch (error) {
       throw error;
