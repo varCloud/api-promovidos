@@ -1,7 +1,12 @@
-const { Sequelize, Op } = require("sequelize");
+const { Sequelize, Op, where } = require("sequelize");
 const Promotores = require("../Models/promotores.model");
 const Promovidos = require("../Models/promovidos.model");
+const Coaliciones = require("../Models/coaliciones.model")
+const CoalicionesPartido = require("../Models/coaliconesPartidos.model")
+const CatPartidos = require("../Models/catPartidos.model")
 const Enlaces = require("../Models/enlaces.model");
+const PrmovidosDAO = require('../DAO/promovidosDAO');
+const Votos = require("../Models/votos.model");
 
 
 class DashboardPromovidosDAO {
@@ -138,6 +143,28 @@ class DashboardPromovidosDAO {
             throw error;
         }
     }
+    async obtenerVotantesPromovidos() {
+        try {
+            var series =
+            {
+                name: 'Percentage',
+                colorByPoint: true,
+                data: {}
+            }
+            let vota = await PrmovidosDAO.obtenerVotantes()
+            series.data = this.buildSeries(vota, "Si")
+
+            let noVota = await PrmovidosDAO.obtenerNoVotantes()
+            series.data = series.data.concat(this.buildSeries(noVota, "No"))
+
+            let noSabe = await PrmovidosDAO.obtenerNoSabeVotantes()
+            series.data = series.data.concat(this.buildSeries(noSabe, "No Sabe"))
+
+            return series
+        } catch (error) {
+            throw error;
+        }
+    }
 
     async obtenerCoberturaPromovidos() {
         try {
@@ -179,6 +206,64 @@ class DashboardPromovidosDAO {
             console.log(`error ================ `,JSON.stringify(error.messagge))
         }
 
+    }
+
+    async obtenerVotosDeCoaliciones(){
+        try {
+            const coalicionesPartido = await CoalicionesPartido.findAll({
+                where: {
+                    activo: 1
+                },
+                logging: true,
+                include: [{
+                    association: 'Partidos'
+                },{
+                    association: 'Coaliciones'
+                },
+                {
+                    association: 'Votos',
+                    where: {
+                        activo: 1
+                    },
+                    attributes: [[Sequelize.fn('SUM', Sequelize.col('numeroVotos')), 'totalVotos']],
+                }
+            ],
+                group: ['coalicionespartidos.idCoalicionPartido']
+            })
+            const coaliciones = {};
+            const dataGrafica = {};
+            coalicionesPartido.forEach(item => {
+                const idCoalicion = item.idCoalicion;
+                if (!coaliciones[idCoalicion]) {
+                    coaliciones[idCoalicion] = {
+                        idCoalicion: idCoalicion,
+                        nombreCoalicion: item.Coaliciones.descripcion,
+                        ...item.Votos.dataValues,
+                        Partidos: [],
+                    };
+                    dataGrafica[idCoalicion] = {
+                        y: item.Votos.dataValues.totalVotos,
+                        name: item.Coaliciones.descripcion
+                    }
+
+                }
+                
+                coaliciones[idCoalicion].Partidos.push(item.Partidos);
+            });
+
+            let coalicionesObject = Object.values(coaliciones)
+            let dataGraficaObject = Object.values(dataGrafica)
+
+            const data = {
+                name: 'Cantidad de votos por coalición',
+                colorByPoint: true,
+                coaliciones: coalicionesObject,
+                data: dataGraficaObject
+            }
+            return data
+        } catch (error) {
+            throw error
+        }
     }
 
     dateFormat(fecha) {
@@ -225,6 +310,13 @@ class DashboardPromovidosDAO {
         })
 
         return series
+    }
+
+    buildSeries(data, text) {
+        return [{
+            y: data,
+            name: text.toString().toUpperCase(),
+        }]
     }
 
     buildSeriesCoberturaPromovidos(data) {

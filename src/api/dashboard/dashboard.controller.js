@@ -21,6 +21,24 @@ class DashboardController {
         }
     }
 
+    async obtenerDataGraficoVotara(req, res) {
+        try {
+            let data = await dashboardPromovidosDAO.obtenerVotantesPromovidos()
+            res.status(200).json(data)
+        } catch (error) {
+            return res.status(500).json({ status: 500, message: error.message })
+        }
+    }
+
+    async obtenerVotosDeCoaliciones(req, res) {
+        try {
+            let data = await dashboardPromovidosDAO.obtenerVotosDeCoaliciones()
+            res.status(200).json(data)
+        } catch (error) {
+            return res.status(500).json({ status: 500, message: error.message })
+        }
+    }
+
     async obtenerDataGraficoEdades(req, res) {
         try {
             let data = await dashboardPromovidosDAO.obtenerDataGraficoEdades();

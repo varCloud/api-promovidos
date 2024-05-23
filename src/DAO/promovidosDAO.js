@@ -51,28 +51,6 @@ class PromovidoDAO {
         }
     }
 
-    async obtenerVotantesPromovidos() {
-        try {
-            var series =
-            {
-                name: 'Percentage',
-                colorByPoint: true,
-                data: {}
-            }
-            let vota = await this.obtenerVotantes()
-            series.data = this.buildSeriesWithName(vota, "Si")
-            console.log(series.data);
-            let noVota = await this.obtenerNoVotantes()
-            series.data = series.data.concat(this.buildSeriesWithName(noVota, "No"))
-            let noSabe = await this.obtenerNoSabeVotantes()
-            series.data = series.data.concat(this.buildSeriesWithName(noSabe, "No Sabe"))
-            console.log(series.data, noSabe);
-            return series
-        } catch (error) {
-            throw error;
-        }
-    }
-
     async actualizarPromovido(promovido) {
         try {
             let promovidoActual = await Promovidos.update({ ...promovido }, { where: { idPromovido: promovido.idPromovido } })
@@ -122,12 +100,6 @@ class PromovidoDAO {
         })
     }
 
-    buildSeriesWithName(data, text) {
-        return [{
-            y: data,
-            name: text.toString().toUpperCase(),
-        }]
-    }
 
 }
 

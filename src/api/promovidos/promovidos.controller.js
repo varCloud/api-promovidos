@@ -20,15 +20,6 @@ class PromovidosController {
         }
     }
 
-    async getEstadisticaVotos(req, res) {
-        try {
-            let data = await PromovidosDAO.obtenerVotantesPromovidos()
-            res.status(200).json(data)
-        } catch (error) {
-            return res.status(500).json({ status: 500, message: error.message })
-        }
-    }
-
     async actualizarPromovido(req, res) {
         try {
             let data = await PromovidosDAO.actualizarPromovido(req.body)
