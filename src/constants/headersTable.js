@@ -8,7 +8,7 @@ module.exports = {
     { label: 'Teléfono', property: 'telefono', renderer: null },
     { label: 'Mail', property: 'mail', renderer: null },
     { label: 'Sección', property: 'seccion', renderer: null },
-    { label: 'Edad', property: 'edad', renderer: null }
+    { label: 'Edad', property: 'edad', renderer: null },
   ],
   HEADERS_ENLACES: [
     // { label: 'Nombres del Enlace', property: 'nombresEnlace', 
@@ -41,6 +41,8 @@ module.exports = {
     { label: 'Seccion', property: 'seccion', renderer: null },
     { label: 'Genero', property: 'genero', renderer: null },
     { label: 'Edad', property: 'edad', renderer: null },
+    { label: 'Vota', property: 'vota', renderer: null },
+
   ],
   FIELDS: [
     'nombres',

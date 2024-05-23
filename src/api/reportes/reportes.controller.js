@@ -10,9 +10,9 @@ class ReportesController {
         }
     }
 
-    async obtenerTodosPromovidos(req, res) {
+    async obtenerPromovidosPorPromotor(req, res) {
         try {
-            await ReportesDAO.obtenerTodosPromovidos(res);
+            await ReportesDAO.obtenerPromovidosPorPromotor(res);
         } catch (err) {
             return res.status(500).json({ status: 500, message: err.message });
         }

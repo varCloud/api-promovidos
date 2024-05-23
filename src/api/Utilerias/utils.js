@@ -108,6 +108,19 @@ function remplazarNulos(data) {
     return data
 }
 
+function remplazarValorVota(vota) {
+    switch (vota) {
+        case false:
+            return 'No'
+        case true:
+            return 'Si'
+        case 2:
+            return 'No Sabe'
+        default:
+            break;
+    }
+}
+
 async function initDoc(res){
     let doc = new PDFDocument({ margins: { ...DETAILS_PAGE_PDF.MARGIN_DOC }, size: 'A4' });
     doc.pipe(res);
@@ -150,4 +163,5 @@ module.exports = {
     initDoc,
     addTable,
     addHeaderDoc,
+    remplazarValorVota,
 }

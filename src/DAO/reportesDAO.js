@@ -2,7 +2,7 @@ const Promovidos = require("../Models/promovidos.model");
 const Promotores = require("../Models/promotores.model");
 const { Op } = require("sequelize");
 const Enlaces = require("../Models/enlaces.model");
-const { remplazarNulos, initDoc, addTable } = require("../api/Utilerias/utils")
+const { remplazarNulos, initDoc, addTable, remplazarValorVota } = require("../api/Utilerias/utils")
 const HEADERS_CONSTANTS = require('../constants/headersTable')
 class ReportesDAO {
     
@@ -41,7 +41,7 @@ class ReportesDAO {
         }
     }
 
-    async obtenerTodosPromovidos(res) {
+    async obtenerPromovidosPorPromotor(res) {
         let response = {};
         try {
             var _promotores = await Promotores.findAll({
@@ -64,12 +64,15 @@ class ReportesDAO {
                     },
                     attributes: this.FIELDS
                 })
-
-                const data = JSON.parse(JSON.stringify(promovidos))
+                let data = JSON.parse(JSON.stringify(promovidos))
                 if (data.length > 0) {
+                    data = data.map(element => {
+                        element.vota = remplazarValorVota(element.vota)
+                        return element
+                    });
                     //LAS SIGUIENTES LINEAS QUITAN LOS NULL Y LOS REMPLAZA POR LOS 3 GUINES
-                    const datas = remplazarNulos(data)
-                    await addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_PROMOTORES)
+                    let datas = remplazarNulos(data)
+                    await addTable(doc, datas, `Promovidos del promotor: ${promotor.Usuario.nombres}`, HEADERS_CONSTANTS.HEADERS_PROMOVIDOS)
                 }
             }
             doc.end();
@@ -234,6 +237,7 @@ class ReportesDAO {
                         seccion: data.seccion,
                         genero: data.genero,
                         edad: data.edad,
+                        vota: remplazarValorVota(data.vota)
                     }
                 })
                 await addTable(doc, dataTable, `Promovidos`, HEADERS_CONSTANTS.HEADERS_PROMOVIDOS)
