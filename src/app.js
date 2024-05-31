@@ -50,6 +50,8 @@ app.use("/reportes", require("./api/reportes/reportes"))
 app.use("/casillas", require("./api/casillas/casillas"))
 app.use("/coalicionesPartidos", require("./api/coalicionesPartidos/coalicionesPartidos"))
 app.use("/votos", require("./api/votos/votos"))
+app.use("/secciones", require("./api/secciones/secciones"))
+app.use("/votosSecciones", require("./api/votosSecciones/votosSecciones"))
 
 const swaggerSpec = swaggerJSDoc({
     swaggerDefinition: {
