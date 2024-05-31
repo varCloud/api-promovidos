@@ -3,6 +3,7 @@ const sequelizeCrm = require('../config/sequelize.crm');
 const catPartidos = require('./catPartidos.model')
 const coaliciones = require('./coaliciones.model')
 const votos = require('./votos.model')
+const votosSecciones = require('./votosSecciones.model')
 
 const coalicionesPartidos = sequelizeCrm.define('coalicionespartidos', {
   idCoalicionPartido: {
@@ -29,7 +30,8 @@ const coalicionesPartidos = sequelizeCrm.define('coalicionespartidos', {
 
 coalicionesPartidos.belongsTo(catPartidos, { as: 'Partidos' , foreignKey: 'idPartido' })
 coalicionesPartidos.belongsTo(coaliciones, { as: 'Coaliciones', foreignKey: 'idCoalicion' })
-coalicionesPartidos.belongsTo(votos, {as: 'Votos', foreignKey: 'idCoalicion', targetKey:'idCoalicion'})
+// coalicionesPartidos.belongsTo(votos, {as: 'Votos', foreignKey: 'idCoalicion', targetKey:'idCoalicion'})
+coalicionesPartidos.belongsTo(votosSecciones, {as: 'Votos', foreignKey: 'idCoalicion', targetKey:'idCoalicion'})
 
 
 module.exports = coalicionesPartidos
