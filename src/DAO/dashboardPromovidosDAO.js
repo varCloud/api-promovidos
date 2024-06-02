@@ -218,7 +218,8 @@ class DashboardPromovidosDAO {
                 include: [{
                     association: 'Partidos'
                 },{
-                    association: 'Coaliciones'
+                    association: 'Coaliciones',
+                    order:['order', 'desc']
                 },
                 {
                     association: 'Votos',
@@ -228,8 +229,11 @@ class DashboardPromovidosDAO {
                     attributes: [[Sequelize.fn('SUM', Sequelize.col('numeroVotos')), 'totalVotos']],
                 }
             ],
-                group: ['coalicionespartidos.idCoalicionPartido']
+            
+            group: ['coalicionespartidos.idCoalicionPartido']
             })
+            console.log(`:::::::::::::::::::::::::::::::coalicionesPartido`)    
+            console.log(coalicionesPartido)
             const coaliciones = {};
             const dataGrafica = {};
             coalicionesPartido.forEach(item => {
@@ -243,7 +247,8 @@ class DashboardPromovidosDAO {
                     };
                     dataGrafica[idCoalicion] = {
                         y: item.Votos.dataValues.totalVotos,
-                        name: item.Coaliciones.descripcion
+                        name: item.Coaliciones.descripcion,
+                        order: item.Coaliciones.order,
                     }
 
                 }
@@ -251,9 +256,14 @@ class DashboardPromovidosDAO {
                 coaliciones[idCoalicion].Partidos.push(item.Partidos);
             });
 
+
             let coalicionesObject = Object.values(coaliciones)
             let dataGraficaObject = Object.values(dataGrafica)
 
+            
+            dataGraficaObject.sort(function (a, b) {
+                return a.order - b.order;
+            });
             const data = {
                 name: 'Cantidad de votos por coalición',
                 colorByPoint: true,

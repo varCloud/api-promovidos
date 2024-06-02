@@ -22,6 +22,9 @@ const coaliciones = sequelizeCrm.define('coaliciones', {
   idEleccion: {
     type: DataTypes.INTEGER
   },
+  order: {
+    type: DataTypes.INTEGER
+  },
 }, {
   timestamps: false
 })
