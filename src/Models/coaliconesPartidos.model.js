@@ -30,7 +30,6 @@ const coalicionesPartidos = sequelizeCrm.define('coalicionespartidos', {
 
 coalicionesPartidos.belongsTo(catPartidos, { as: 'Partidos' , foreignKey: 'idPartido' })
 coalicionesPartidos.belongsTo(coaliciones, { as: 'Coaliciones', foreignKey: 'idCoalicion' })
-// coalicionesPartidos.belongsTo(votos, {as: 'Votos', foreignKey: 'idCoalicion', targetKey:'idCoalicion'})
 coalicionesPartidos.belongsTo(votosSecciones, {as: 'Votos', foreignKey: 'idCoalicion', targetKey:'idCoalicion'})
 
 

@@ -31,7 +31,7 @@ class VotosSeccionesController {
 
   async actualizarVotoSeccion(req, res) {
     try {
-      let data = await VotosSeccionesDAO.actualizarVotoSeccion(req.body)
+      let data = await VotosSeccionesDAO.actualizarVotoSeccion(req.params,req.body)
       res.status(200).json(data);
     } catch (err) {
       return res.status(500).json({ status: 500, message: err.message });

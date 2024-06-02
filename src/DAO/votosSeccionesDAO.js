@@ -42,25 +42,21 @@ class VotosSeccionesDAO {
     }
   }
 
-  async crearVotoSeccion(votoSeccion) {
+  async crearVotoSeccion(votosSecciones) {
     try {
-      votoSeccion.activo = 1;
-      await VotosSeccionesModel.create({ ...votoSeccion })
-      let votosSeccionActual = await VotosSeccionesModel.findOne({
-        order: [
-          ['idVoto', 'DESC']
-        ],
-      })
-      return votosSeccionActual;
+        await VotosSeccionesModel.bulkCreate(votosSecciones)
+        return votosSecciones
+
     } catch (error) {
       throw error
     }
   }
 
-  async actualizarVotoSeccion(votoSeccion) {
+  async actualizarVotoSeccion(params , votosSecciones) {
     try {
-      await VotosSeccionesModel.update({ activo: 0 }, { where: { idSeccion: votoSeccion.idSeccion } })
-      let votosSeccionActual = await this.crearVotoSeccion(votoSeccion)
+      const idSeccion = params.idSeccion
+      await VotosSeccionesModel.update({ activo: 0 }, { where: { idSeccion: idSeccion } })
+      let votosSeccionActual = await this.crearVotoSeccion(votosSecciones)
       return votosSeccionActual;
     } catch (error) {
       throw error
